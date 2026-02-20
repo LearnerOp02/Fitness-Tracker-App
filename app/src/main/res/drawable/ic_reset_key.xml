@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="88dp"
+    android:height="88dp"
+    android:viewportWidth="88"
+    android:viewportHeight="88">
+    <!-- Circle background -->
+    <path android:fillColor="#16213E"
+        android:pathData="M44,44 m-42,0 a42,42 0 1,0 84,0 a42,42 0 1,0 -84,0"/>
+    <!-- Circle border -->
+    <path android:fillColor="#E94560"
+        android:pathData="M44,44 m-42,0 a42,42 0 1,0 84,0 a42,42 0 1,0 -84,0
+                          M44,44 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/>
+    <!-- Key head (circle) -->
+    <path android:fillColor="#E94560"
+        android:pathData="M34,44 m-12,0 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0"/>
+    <!-- Key hole -->
+    <path android:fillColor="#16213E"
+        android:pathData="M34,44 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0"/>
+    <!-- Key shaft -->
+    <path android:fillColor="#E94560"
+        android:pathData="M44,42 L68,42 L68,46 L44,46 Z"/>
+    <!-- Key teeth -->
+    <path android:fillColor="#E94560"
+        android:pathData="M60,46 L60,52 L64,52 L64,46 Z"/>
+    <path android:fillColor="#E94560"
+        android:pathData="M52,46 L52,50 L56,50 L56,46 Z"/>
+</vector>
