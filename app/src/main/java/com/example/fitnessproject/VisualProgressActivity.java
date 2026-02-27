@@ -2,7 +2,6 @@ package com.example.fitnessproject;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,17 +21,20 @@ import java.util.Locale;
 public class VisualProgressActivity extends AppCompatActivity {
 
     private static final int REQ_START_PHOTO = 1001;
-    private static final int REQ_END_PHOTO   = 1002;
+    private static final int REQ_END_PHOTO = 1002;
 
     private ImageButton btnBack, btnUploadStart, btnUploadEnd;
-    private ImageView   ivStartPhoto, ivEndPhoto;
-    private TextView    tvStartDate, tvEndDate,
+    private ImageView ivStartPhoto, ivEndPhoto;
+    private TextView tvStartDate, tvEndDate,
             tvWeightChange, tvBmiChange, tvWorkoutsThisMonth;
+    private UserSessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.visual_progress);
+
+        sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
         initViews();
         loadSavedPhotos();
         loadNumericalData();
@@ -40,53 +42,57 @@ public class VisualProgressActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        btnBack             = findViewById(R.id.btnBack);
-        btnUploadStart      = findViewById(R.id.btnUploadStart);
-        btnUploadEnd        = findViewById(R.id.btnUploadEnd);
-        ivStartPhoto        = findViewById(R.id.ivStartPhoto);
-        ivEndPhoto          = findViewById(R.id.ivEndPhoto);
-        tvStartDate         = findViewById(R.id.tvStartDate);
-        tvEndDate           = findViewById(R.id.tvEndDate);
-        tvWeightChange      = findViewById(R.id.tvWeightChange);
-        tvBmiChange         = findViewById(R.id.tvBmiChange);
+        btnBack = findViewById(R.id.btnBack);
+        btnUploadStart = findViewById(R.id.btnUploadStart);
+        btnUploadEnd = findViewById(R.id.btnUploadEnd);
+        ivStartPhoto = findViewById(R.id.ivStartPhoto);
+        ivEndPhoto = findViewById(R.id.ivEndPhoto);
+        tvStartDate = findViewById(R.id.tvStartDate);
+        tvEndDate = findViewById(R.id.tvEndDate);
+        tvWeightChange = findViewById(R.id.tvWeightChange);
+        tvBmiChange = findViewById(R.id.tvBmiChange);
         tvWorkoutsThisMonth = findViewById(R.id.tvWorkoutsThisMonth);
     }
 
     private void loadSavedPhotos() {
-        SharedPreferences prefs = getSharedPreferences("FitLifePrefs", MODE_PRIVATE);
-        String startUri = prefs.getString("startPhotoUri", "");
-        String endUri   = prefs.getString("endPhotoUri",   "");
-        String startDt  = prefs.getString("startPhotoDate", "Not uploaded");
-        String endDt    = prefs.getString("endPhotoDate",   "Not uploaded");
+        String startUri = sessionManager.getPhotoUri("startPhotoUri");
+        String endUri = sessionManager.getPhotoUri("endPhotoUri");
+        String startDt = sessionManager.getPhotoDate("startPhotoDate");
+        String endDt = sessionManager.getPhotoDate("endPhotoDate");
 
         if (!startUri.isEmpty()) {
-            try { ivStartPhoto.setImageURI(Uri.parse(startUri)); } catch (Exception ignored) {}
+            try {
+                ivStartPhoto.setImageURI(Uri.parse(startUri));
+            } catch (Exception ignored) {
+            }
         }
         if (!endUri.isEmpty()) {
-            try { ivEndPhoto.setImageURI(Uri.parse(endUri)); } catch (Exception ignored) {}
+            try {
+                ivEndPhoto.setImageURI(Uri.parse(endUri));
+            } catch (Exception ignored) {
+            }
         }
         tvStartDate.setText(startDt);
         tvEndDate.setText(endDt);
     }
 
     private void loadNumericalData() {
-        SharedPreferences prefs = getSharedPreferences("FitLifePrefs", MODE_PRIVATE);
-        float currentBmi    = prefs.getFloat("userBMI", 0f);
-        float prevBmi       = prefs.getFloat("prevMonthBMI", 0f);
+        float currentBmi = sessionManager.getBMI();
+        float prevBmi = sessionManager.getPrevMonthBMI();
         float currentWeight = 0, prevWeight = 0;
 
         try {
-            currentWeight = Float.parseFloat(prefs.getString("userWeight", "0"));
-            prevWeight    = prefs.getFloat("prevMonthWeight", currentWeight);
-        } catch (Exception ignored) {}
+            currentWeight = Float.parseFloat(sessionManager.getUserWeight());
+            prevWeight = sessionManager.getPrevMonthWeight();
+            if (prevWeight == 0) prevWeight = currentWeight;
+        } catch (Exception ignored) {
+        }
 
-        // Weight change
         float wDiff = currentWeight - prevWeight;
         String wStr = wDiff == 0 ? "No change" : String.format("%+.1f kg", wDiff);
         tvWeightChange.setText(wStr);
         tvWeightChange.setTextColor(wDiff <= 0 ? 0xFF4CAF50 : 0xFFF44336);
 
-        // BMI change
         if (currentBmi > 0 && prevBmi > 0) {
             float bDiff = currentBmi - prevBmi;
             tvBmiChange.setText(String.format("%+.1f pts", bDiff));
@@ -95,15 +101,15 @@ public class VisualProgressActivity extends AppCompatActivity {
             tvBmiChange.setText("N/A");
         }
 
-        // Count this month's workouts
         String currentMonth = new SimpleDateFormat("yyyy-MM", Locale.getDefault()).format(new Date());
         int count = 0;
         try {
-            JSONArray arr = new JSONArray(prefs.getString("workoutHistory", "[]"));
+            JSONArray arr = new JSONArray(sessionManager.getWorkoutHistory());
             for (int i = 0; i < arr.length(); i++) {
                 if (arr.getJSONObject(i).optString("date", "").startsWith(currentMonth)) count++;
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         tvWorkoutsThisMonth.setText(String.valueOf(count));
     }
 
@@ -130,20 +136,18 @@ public class VisualProgressActivity extends AppCompatActivity {
         if (uri == null) return;
 
         String date = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date());
-        SharedPreferences.Editor editor = getSharedPreferences("FitLifePrefs", MODE_PRIVATE).edit();
 
         if (requestCode == REQ_START_PHOTO) {
             ivStartPhoto.setImageURI(uri);
             tvStartDate.setText(date);
-            editor.putString("startPhotoUri", uri.toString())
-                    .putString("startPhotoDate", date);
+            sessionManager.savePhotoUri("startPhotoUri", uri.toString());
+            sessionManager.savePhotoDate("startPhotoDate", date);
         } else if (requestCode == REQ_END_PHOTO) {
             ivEndPhoto.setImageURI(uri);
             tvEndDate.setText(date);
-            editor.putString("endPhotoUri", uri.toString())
-                    .putString("endPhotoDate", date);
+            sessionManager.savePhotoUri("endPhotoUri", uri.toString());
+            sessionManager.savePhotoDate("endPhotoDate", date);
         }
-        editor.apply();
         Toast.makeText(this, "Photo saved! ✓", Toast.LENGTH_SHORT).show();
     }
 }

@@ -1,6 +1,5 @@
 package com.example.fitnessproject;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,15 +16,18 @@ import androidx.appcompat.app.AppCompatActivity;
 public class BmiCalculatorActivity extends AppCompatActivity {
 
     private ImageButton btnBack;
-    private EditText    etBmiHeight, etBmiWeight;
-    private TextView    tvBmiValue, tvBmiCategory, tvBmiTip;
-    private View        bmiMarker;
-    private Button      btnSaveBmi;
+    private EditText etBmiHeight, etBmiWeight;
+    private TextView tvBmiValue, tvBmiCategory, tvBmiTip;
+    private View bmiMarker;
+    private Button btnSaveBmi;
+    private UserSessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bmi_calculator);
+
+        sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
         initViews();
         prefillFromProfile();
         setupLiveCalculation();
@@ -34,30 +36,37 @@ public class BmiCalculatorActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        btnBack      = findViewById(R.id.btnBack);
-        etBmiHeight  = findViewById(R.id.etBmiHeight);
-        etBmiWeight  = findViewById(R.id.etBmiWeight);
-        tvBmiValue   = findViewById(R.id.tvBmiValue);
-        tvBmiCategory= findViewById(R.id.tvBmiCategory);
-        tvBmiTip     = findViewById(R.id.tvBmiTip);
-        bmiMarker    = findViewById(R.id.bmiMarker);
-        btnSaveBmi   = findViewById(R.id.btnSaveBmi);
+        btnBack = findViewById(R.id.btnBack);
+        etBmiHeight = findViewById(R.id.etBmiHeight);
+        etBmiWeight = findViewById(R.id.etBmiWeight);
+        tvBmiValue = findViewById(R.id.tvBmiValue);
+        tvBmiCategory = findViewById(R.id.tvBmiCategory);
+        tvBmiTip = findViewById(R.id.tvBmiTip);
+        bmiMarker = findViewById(R.id.bmiMarker);
+        btnSaveBmi = findViewById(R.id.btnSaveBmi);
     }
 
-    // Pre-fill height/weight from saved profile
     private void prefillFromProfile() {
-        SharedPreferences prefs = getSharedPreferences("FitLifePrefs", MODE_PRIVATE);
-        String h = prefs.getString("userHeight", "");
-        String w = prefs.getString("userWeight", "");
+        String h = sessionManager.getUserHeight();
+        String w = sessionManager.getUserWeight();
         if (!h.isEmpty()) etBmiHeight.setText(h);
         if (!w.isEmpty()) etBmiWeight.setText(w);
     }
 
     private void setupLiveCalculation() {
         TextWatcher watcher = new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int i, int c, int a) {}
-            @Override public void onTextChanged(CharSequence s, int i, int b, int c) {}
-            @Override public void afterTextChanged(Editable s) { calculateBMI(); }
+            @Override
+            public void beforeTextChanged(CharSequence s, int i, int c, int a) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int i, int b, int c) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                calculateBMI();
+            }
         };
         etBmiHeight.addTextChangedListener(watcher);
         etBmiWeight.addTextChangedListener(watcher);
@@ -74,34 +83,33 @@ public class BmiCalculatorActivity extends AppCompatActivity {
             if (heightCm <= 0 || weightKg <= 0) return;
 
             float heightM = heightCm / 100f;
-            float bmi     = weightKg / (heightM * heightM);
+            float bmi = weightKg / (heightM * heightM);
 
             tvBmiValue.setText(String.format("%.1f", bmi));
 
-            // Category + color + tip
             String category, tip;
             int color;
-            float markerPct; // 0.0 – 1.0 across the color bar
+            float markerPct;
 
             if (bmi < 18.5f) {
-                category  = "Underweight";
-                color     = 0xFF2196F3;
-                tip       = "💡 Increase caloric intake and strength training.";
+                category = "Underweight";
+                color = 0xFF2196F3;
+                tip = "💡 Increase caloric intake and strength training.";
                 markerPct = bmi / 18.5f * 0.25f;
             } else if (bmi < 25f) {
-                category  = "Normal Weight ✓";
-                color     = 0xFF4CAF50;
-                tip       = "✅ Great! Maintain your current routine.";
+                category = "Normal Weight ✓";
+                color = 0xFF4CAF50;
+                tip = "✅ Great! Maintain your current routine.";
                 markerPct = 0.25f + ((bmi - 18.5f) / 6.5f) * 0.25f;
             } else if (bmi < 30f) {
-                category  = "Overweight";
-                color     = 0xFFFF9800;
-                tip       = "⚠️ Add cardio sessions and reduce calorie intake.";
+                category = "Overweight";
+                color = 0xFFFF9800;
+                tip = "⚠️ Add cardio sessions and reduce calorie intake.";
                 markerPct = 0.50f + ((bmi - 25f) / 5f) * 0.25f;
             } else {
-                category  = "Obese";
-                color     = 0xFFF44336;
-                tip       = "🔴 Consult a physician and start low-intensity workouts.";
+                category = "Obese";
+                color = 0xFFF44336;
+                tip = "🔴 Consult a physician and start low-intensity workouts.";
                 markerPct = Math.min(0.75f + ((bmi - 30f) / 10f) * 0.25f, 0.97f);
             }
 
@@ -110,14 +118,14 @@ public class BmiCalculatorActivity extends AppCompatActivity {
             tvBmiValue.setTextColor(color);
             tvBmiTip.setText(tip);
 
-            // Move marker on color bar
             bmiMarker.post(() -> {
                 ViewGroup parent = (ViewGroup) bmiMarker.getParent();
                 int barWidth = parent.getWidth();
                 bmiMarker.setTranslationX(barWidth * markerPct);
             });
 
-        } catch (NumberFormatException ignored) {}
+        } catch (NumberFormatException ignored) {
+        }
     }
 
     private void saveBmiToProfile() {
@@ -128,15 +136,31 @@ public class BmiCalculatorActivity extends AppCompatActivity {
             return;
         }
         try {
-            float h   = Float.parseFloat(hStr);
-            float w   = Float.parseFloat(wStr);
+            float h = Float.parseFloat(hStr);
+            float w = Float.parseFloat(wStr);
             float bmi = w / ((h / 100f) * (h / 100f));
 
-            getSharedPreferences("FitLifePrefs", MODE_PRIVATE).edit()
-                    .putString("userHeight", hStr)
-                    .putString("userWeight", wStr)
-                    .putFloat("userBMI", bmi)
-                    .apply();
+            // Save current as prev month before updating
+            float currentWeight = 0;
+            float currentBmi = 0;
+            try {
+                currentWeight = Float.parseFloat(sessionManager.getUserWeight());
+                currentBmi = sessionManager.getBMI();
+                sessionManager.savePrevMonthData(currentWeight, currentBmi);
+            } catch (Exception e) {
+                // First time saving
+            }
+
+            // Update profile
+            sessionManager.saveProfile(
+                    sessionManager.getUserAge(),
+                    hStr,
+                    wStr,
+                    sessionManager.getUserGender(),
+                    sessionManager.getUserGoal(),
+                    sessionManager.getUserActivityLevel(),
+                    bmi
+            );
 
             Toast.makeText(this, "BMI saved to profile ✓", Toast.LENGTH_SHORT).show();
             finish();

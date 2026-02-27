@@ -3,6 +3,8 @@ package com.example.fitnessproject;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.json.JSONArray;
+
 public class UserSessionManager {
     private static final String PREF_NAME = "FitLifePrefs";
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
@@ -23,6 +25,7 @@ public class UserSessionManager {
     private static final String KEY_TODAY_WORKOUT = "todayWorkout";
     private static final String KEY_WORKOUT_COMPLETED = "workoutCompleted";
     private static final String KEY_WORKOUT_TOTAL = "workoutTotal";
+    private static final String KEY_WORKOUT_HISTORY = "workoutHistory";
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
@@ -39,7 +42,7 @@ public class UserSessionManager {
         editor.putString(KEY_USER_NAME, name);
         editor.putString(KEY_USER_EMAIL, email);
         editor.putString(KEY_USER_PASSWORD, password);
-        editor.commit();
+        editor.apply();
     }
 
     public void createRegisterSession(String name, String email, String password, String phone, String goal) {
@@ -50,7 +53,7 @@ public class UserSessionManager {
         editor.putString(KEY_USER_PHONE, phone);
         editor.putString(KEY_USER_GOAL, goal);
         editor.putBoolean(KEY_PROFILE_COMPLETE, false);
-        editor.commit();
+        editor.apply();
     }
 
     public void saveProfile(String age, String height, String weight, String gender,
@@ -63,7 +66,7 @@ public class UserSessionManager {
         editor.putString(KEY_USER_ACTIVITY_LEVEL, activityLevel);
         editor.putFloat(KEY_USER_BMI, bmi);
         editor.putBoolean(KEY_PROFILE_COMPLETE, true);
-        editor.commit();
+        editor.apply();
     }
 
     public boolean isLoggedIn() {
@@ -71,8 +74,13 @@ public class UserSessionManager {
     }
 
     public void logout() {
+        editor.putBoolean(KEY_IS_LOGGED_IN, false);
+        editor.apply();
+    }
+
+    public void clearAll() {
         editor.clear();
-        editor.commit();
+        editor.apply();
     }
 
     public String getUserName() {
@@ -83,13 +91,17 @@ public class UserSessionManager {
         return prefs.getString(KEY_USER_EMAIL, "");
     }
 
+    public String getUserPassword() {
+        return prefs.getString(KEY_USER_PASSWORD, "");
+    }
+
     public boolean isProfileComplete() {
         return prefs.getBoolean(KEY_PROFILE_COMPLETE, false);
     }
 
     public void setProfileComplete(boolean status) {
         editor.putBoolean(KEY_PROFILE_COMPLETE, status);
-        editor.commit();
+        editor.apply();
     }
 
     public float getBMI() {
@@ -101,17 +113,26 @@ public class UserSessionManager {
     }
 
     public void setDisciplineScore(int score) {
-        editor.putInt(KEY_DISCIPLINE_SCORE, score);
-        editor.commit();
+        editor.putInt(KEY_DISCIPLINE_SCORE, Math.min(100, Math.max(0, score)));
+        editor.apply();
+    }
+
+    public void incrementDisciplineScore(int increment) {
+        int current = getDisciplineScore();
+        setDisciplineScore(current + increment);
     }
 
     public int getWorkoutStreak() {
-        return prefs.getInt(KEY_WORKOUT_STREAK, 12);
+        return prefs.getInt(KEY_WORKOUT_STREAK, 0);
     }
 
     public void setWorkoutStreak(int streak) {
         editor.putInt(KEY_WORKOUT_STREAK, streak);
-        editor.commit();
+        editor.apply();
+    }
+
+    public void incrementWorkoutStreak() {
+        setWorkoutStreak(getWorkoutStreak() + 1);
     }
 
     public String getTodayWorkout() {
@@ -120,16 +141,24 @@ public class UserSessionManager {
 
     public void setTodayWorkout(String workout) {
         editor.putString(KEY_TODAY_WORKOUT, workout);
-        editor.commit();
+        editor.apply();
     }
 
     public int getWorkoutCompleted() {
-        return prefs.getInt(KEY_WORKOUT_COMPLETED, 2);
+        return prefs.getInt(KEY_WORKOUT_COMPLETED, 0);
     }
 
     public void setWorkoutCompleted(int completed) {
-        editor.putInt(KEY_WORKOUT_COMPLETED, completed);
-        editor.commit();
+        editor.putInt(KEY_WORKOUT_COMPLETED, Math.min(completed, getWorkoutTotal()));
+        editor.apply();
+    }
+
+    public void incrementWorkoutCompleted() {
+        int current = getWorkoutCompleted();
+        if (current < getWorkoutTotal()) {
+            editor.putInt(KEY_WORKOUT_COMPLETED, current + 1);
+            editor.apply();
+        }
     }
 
     public int getWorkoutTotal() {
@@ -138,24 +167,89 @@ public class UserSessionManager {
 
     public void setWorkoutTotal(int total) {
         editor.putInt(KEY_WORKOUT_TOTAL, total);
-        editor.commit();
-    }
-
-    public void incrementWorkoutCompleted() {
-        int current = getWorkoutCompleted();
-        if (current < getWorkoutTotal()) {
-            editor.putInt(KEY_WORKOUT_COMPLETED, current + 1);
-            editor.commit();
-        }
+        editor.apply();
     }
 
     public void resetWorkoutProgress() {
         editor.putInt(KEY_WORKOUT_COMPLETED, 0);
-        editor.commit();
+        editor.apply();
     }
 
-    public void clear() {
-        editor.clear();
-        editor.commit();
+    public String getWorkoutHistory() {
+        return prefs.getString(KEY_WORKOUT_HISTORY, "[]");
+    }
+
+    public void setWorkoutHistory(String history) {
+        editor.putString(KEY_WORKOUT_HISTORY, history);
+        editor.apply();
+    }
+
+    public String getUserHeight() {
+        return prefs.getString(KEY_USER_HEIGHT, "");
+    }
+
+    public String getUserWeight() {
+        return prefs.getString(KEY_USER_WEIGHT, "");
+    }
+
+    public String getUserGoal() {
+        return prefs.getString(KEY_USER_GOAL, "Build Muscle");
+    }
+
+    public String getUserActivityLevel() {
+        return prefs.getString(KEY_USER_ACTIVITY_LEVEL, "Moderately Active");
+    }
+
+    public String getUserGender() {
+        return prefs.getString(KEY_USER_GENDER, "Male");
+    }
+
+    public String getUserAge() {
+        return prefs.getString(KEY_USER_AGE, "25");
+    }
+
+    public String getUserPhone() {
+        return prefs.getString(KEY_USER_PHONE, "");
+    }
+
+    public boolean getNotificationPref(String key, boolean defaultValue) {
+        return prefs.getBoolean(key, defaultValue);
+    }
+
+    public void setNotificationPref(String key, boolean value) {
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
+    public void savePhotoUri(String key, String uri) {
+        editor.putString(key, uri);
+        editor.apply();
+    }
+
+    public String getPhotoUri(String key) {
+        return prefs.getString(key, "");
+    }
+
+    public void savePhotoDate(String key, String date) {
+        editor.putString(key, date);
+        editor.apply();
+    }
+
+    public String getPhotoDate(String key) {
+        return prefs.getString(key, "Not uploaded");
+    }
+
+    public void savePrevMonthData(float prevWeight, float prevBmi) {
+        editor.putFloat("prevMonthWeight", prevWeight);
+        editor.putFloat("prevMonthBMI", prevBmi);
+        editor.apply();
+    }
+
+    public float getPrevMonthWeight() {
+        return prefs.getFloat("prevMonthWeight", 0f);
+    }
+
+    public float getPrevMonthBMI() {
+        return prefs.getFloat("prevMonthBMI", 0f);
     }
 }

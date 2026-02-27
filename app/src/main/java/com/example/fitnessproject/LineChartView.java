@@ -11,12 +11,23 @@ public class LineChartView extends View {
 
     private float[] data = {};
     private final Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Paint dotPaint  = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint dotPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint gridPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-    public LineChartView(Context ctx) { super(ctx); init(); }
-    public LineChartView(Context ctx, AttributeSet a) { super(ctx, a); init(); }
-    public LineChartView(Context ctx, AttributeSet a, int d) { super(ctx, a, d); init(); }
+    public LineChartView(Context ctx) {
+        super(ctx);
+        init();
+    }
+
+    public LineChartView(Context ctx, AttributeSet a) {
+        super(ctx, a);
+        init();
+    }
+
+    public LineChartView(Context ctx, AttributeSet a, int d) {
+        super(ctx, a, d);
+        init();
+    }
 
     private void init() {
         linePaint.setColor(0xFF4CAF50);
@@ -45,25 +56,22 @@ public class LineChartView extends View {
         float chartW = w - padL - padR;
         float chartH = h - padT - padB;
 
-        // Grid lines
         for (int i = 1; i <= 4; i++) {
             float y = padT + chartH * (1 - i / 4f);
             canvas.drawLine(padL, y, w - padR, y, gridPaint);
         }
 
-        // Line path
         Path path = new Path();
         for (int i = 0; i < data.length; i++) {
-            float x = padL + (i / (float)(data.length - 1)) * chartW;
+            float x = padL + (i / (float) (data.length - 1)) * chartW;
             float y = padT + chartH * (1 - data[i] / maxVal);
             if (i == 0) path.moveTo(x, y);
-            else        path.lineTo(x, y);
+            else path.lineTo(x, y);
         }
         canvas.drawPath(path, linePaint);
 
-        // Dots at each data point
         for (int i = 0; i < data.length; i++) {
-            float x = padL + (i / (float)(data.length - 1)) * chartW;
+            float x = padL + (i / (float) (data.length - 1)) * chartW;
             float y = padT + chartH * (1 - data[i] / maxVal);
             canvas.drawCircle(x, y, 5f, dotPaint);
         }

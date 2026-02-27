@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class SettingsActivity extends AppCompatActivity {
 
     private ImageButton btnBack;
-    private Button      btnLogout;
+    private Button btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +21,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        btnBack  = findViewById(R.id.btnBack);
-        btnLogout= findViewById(R.id.btnLogout);
+        btnBack = findViewById(R.id.btnBack);
+        btnLogout = findViewById(R.id.btnLogout);
     }
 
     private void setupListeners() {
@@ -31,8 +31,10 @@ public class SettingsActivity extends AppCompatActivity {
         findViewById(R.id.rowUpdateProfile).setOnClickListener(v ->
                 startActivity(new Intent(this, ProfileSetupActivity.class)));
 
-        findViewById(R.id.rowChangePassword).setOnClickListener(v ->
-                startActivity(new Intent(this, ForgotPasswordActivity.class)));
+        findViewById(R.id.rowChangePassword).setOnClickListener(v -> {
+            Intent intent = new Intent(this, ForgetPasswordActivity.class);
+            startActivity(intent);
+        });
 
         findViewById(R.id.rowNotifications).setOnClickListener(v ->
                 startActivity(new Intent(this, NotificationsActivity.class)));
@@ -40,7 +42,9 @@ public class SettingsActivity extends AppCompatActivity {
         findViewById(R.id.rowBmi).setOnClickListener(v ->
                 startActivity(new Intent(this, BmiCalculatorActivity.class)));
 
-        btnLogout.setOnClickListener(v ->
-                startActivity(new Intent(this, LogoutConfirmActivity.class)));
+        btnLogout.setOnClickListener(v -> {
+            Intent intent = new Intent(this, LogoutConfirmActivity.class);
+            startActivity(intent);
+        });
     }
 }

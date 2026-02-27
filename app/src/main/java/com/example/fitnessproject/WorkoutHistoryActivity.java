@@ -1,7 +1,6 @@
 package com.example.fitnessproject;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +19,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -27,18 +27,21 @@ import java.util.Locale;
 public class WorkoutHistoryActivity extends AppCompatActivity {
 
     private ImageButton btnBack;
-    private TextView    tvTotalWorkouts, tvTotalMinutes, tvTotalCalories, tvEmptyHistory;
-    private Button      btnFilterAll, btnFilterDaily, btnFilterWeekly;
-    private ListView    listWorkoutHistory;
+    private TextView tvTotalWorkouts, tvTotalMinutes, tvTotalCalories, tvEmptyHistory;
+    private Button btnFilterAll, btnFilterDaily, btnFilterWeekly;
+    private ListView listWorkoutHistory;
     private FloatingActionButton fabAddWorkout;
+    private UserSessionManager sessionManager;
 
-    private List<String> allEntries    = new ArrayList<>();
-    private JSONArray    workoutHistory = new JSONArray();
+    private List<String> allEntries = new ArrayList<>();
+    private JSONArray workoutHistory = new JSONArray();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.workout_history);
+
+        sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
         initViews();
         setupListeners();
     }
@@ -51,21 +54,20 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        btnBack            = findViewById(R.id.btnBack);
-        tvTotalWorkouts    = findViewById(R.id.tvTotalWorkouts);
-        tvTotalMinutes     = findViewById(R.id.tvTotalMinutes);
-        tvTotalCalories    = findViewById(R.id.tvTotalCalories);
-        tvEmptyHistory     = findViewById(R.id.tvEmptyHistory);
-        btnFilterAll       = findViewById(R.id.btnFilterAll);
-        btnFilterDaily     = findViewById(R.id.btnFilterDaily);
-        btnFilterWeekly    = findViewById(R.id.btnFilterWeekly);
+        btnBack = findViewById(R.id.btnBack);
+        tvTotalWorkouts = findViewById(R.id.tvTotalWorkouts);
+        tvTotalMinutes = findViewById(R.id.tvTotalMinutes);
+        tvTotalCalories = findViewById(R.id.tvTotalCalories);
+        tvEmptyHistory = findViewById(R.id.tvEmptyHistory);
+        btnFilterAll = findViewById(R.id.btnFilterAll);
+        btnFilterDaily = findViewById(R.id.btnFilterDaily);
+        btnFilterWeekly = findViewById(R.id.btnFilterWeekly);
         listWorkoutHistory = findViewById(R.id.listWorkoutHistory);
-        fabAddWorkout      = findViewById(R.id.fabAddWorkout);
+        fabAddWorkout = findViewById(R.id.fabAddWorkout);
     }
 
     private void loadHistory() {
-        SharedPreferences prefs = getSharedPreferences("FitLifePrefs", MODE_PRIVATE);
-        String json = prefs.getString("workoutHistory", "[]");
+        String json = sessionManager.getWorkoutHistory();
         try {
             workoutHistory = new JSONArray(json);
         } catch (Exception e) {
@@ -87,14 +89,13 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                 String date = obj.optString("date", "");
 
                 boolean include = false;
-                if      (filter.equals("all"))    include = true;
-                else if (filter.equals("today"))  include = date.equals(todayDate);
-                else if (filter.equals("week"))   include = date.compareTo(weekStart) >= 0;
+                if (filter.equals("all")) include = true;
+                else if (filter.equals("today")) include = date.equals(todayDate);
+                else if (filter.equals("week")) include = date.compareTo(weekStart) >= 0;
 
                 if (include) {
                     int dur = obj.optInt("duration", 0);
-                    totalMinutes  += dur;
-                    // Parse calorie number from "~210 kcal" string
+                    totalMinutes += dur;
                     String cal = obj.optString("calories", "0").replaceAll("[^0-9]", "");
                     if (!cal.isEmpty()) totalCalories += Integer.parseInt(cal);
 
@@ -106,14 +107,13 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                     displayList.add(line);
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
-        // Update summary strip
         tvTotalWorkouts.setText(String.valueOf(displayList.size()));
         tvTotalMinutes.setText(String.valueOf(totalMinutes));
         tvTotalCalories.setText(String.valueOf(totalCalories));
 
-        // Show/hide empty state
         if (displayList.isEmpty()) {
             tvEmptyHistory.setVisibility(View.VISIBLE);
             listWorkoutHistory.setVisibility(View.GONE);
@@ -137,12 +137,17 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
             listWorkoutHistory.setAdapter(adapter);
         }
 
-        // Highlight active filter button
         resetFilterButtons();
         switch (filter) {
-            case "all":   styleActiveFilter(btnFilterAll);   break;
-            case "today": styleActiveFilter(btnFilterDaily); break;
-            case "week":  styleActiveFilter(btnFilterWeekly);break;
+            case "all":
+                styleActiveFilter(btnFilterAll);
+                break;
+            case "today":
+                styleActiveFilter(btnFilterDaily);
+                break;
+            case "week":
+                styleActiveFilter(btnFilterWeekly);
+                break;
         }
     }
 
@@ -159,8 +164,8 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
     }
 
     private String getWeekStart() {
-        java.util.Calendar cal = java.util.Calendar.getInstance();
-        cal.set(java.util.Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
         return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(cal.getTime());
     }
 

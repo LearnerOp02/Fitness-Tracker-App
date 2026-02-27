@@ -1,7 +1,6 @@
 package com.example.fitnessproject;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.animation.AlphaAnimation;
@@ -15,15 +14,18 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
     private static final int SPLASH_DELAY = 3000;
+    private UserSessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageView logo    = findViewById(R.id.splashLogo);
-        TextView appName  = findViewById(R.id.appName);
-        TextView tagline  = findViewById(R.id.tagline);
+        sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
+
+        ImageView logo = findViewById(R.id.splashLogo);
+        TextView appName = findViewById(R.id.appName);
+        TextView tagline = findViewById(R.id.tagline);
 
         // Scale animation for logo
         ScaleAnimation scaleAnim = new ScaleAnimation(
@@ -53,19 +55,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void navigateNext() {
-        SharedPreferences prefs = getSharedPreferences("FitLifePrefs", MODE_PRIVATE);
-        boolean isLoggedIn      = prefs.getBoolean("isLoggedIn", false);
-        boolean profileComplete = prefs.getBoolean("profileComplete", false);
+        boolean isLoggedIn = sessionManager.isLoggedIn();
+        boolean profileComplete = sessionManager.isProfileComplete();
 
         Intent intent;
         if (isLoggedIn && profileComplete) {
-            // Fully set up user → go straight to Home
             intent = new Intent(this, HomeActivity.class);
         } else if (isLoggedIn) {
-            // Logged in but profile not set → go to Profile Setup
             intent = new Intent(this, ProfileSetupActivity.class);
         } else {
-            // Not logged in → go to Login
             intent = new Intent(this, LoginActivity.class);
         }
         startActivity(intent);

@@ -1,6 +1,5 @@
 package com.example.fitnessproject;
 
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -14,13 +13,13 @@ import androidx.cardview.widget.CardView;
 
 public class WorkoutPlanActivity extends AppCompatActivity {
 
-    private ImageButton  btnBack;
-    private TextView     tvPlanTitle, tvProfileSummary, tvAdaptiveBadge,
+    private ImageButton btnBack;
+    private TextView tvPlanTitle, tvProfileSummary, tvAdaptiveBadge,
             tvAdaptiveReason;
-    private CardView     cardAdaptiveReason;
+    private CardView cardAdaptiveReason;
     private LinearLayout layoutPlanDays;
+    private UserSessionManager sessionManager;
 
-    // Pass "adaptive" = true from intent to show Adaptive screen
     private boolean isAdaptive = false;
 
     @Override
@@ -28,6 +27,7 @@ public class WorkoutPlanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.workout_plan);
 
+        sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
         isAdaptive = getIntent().getBooleanExtra("adaptive", false);
 
         initViews();
@@ -36,25 +36,22 @@ public class WorkoutPlanActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        btnBack            = findViewById(R.id.btnBack);
-        tvPlanTitle        = findViewById(R.id.tvPlanTitle);
-        tvProfileSummary   = findViewById(R.id.tvProfileSummary);
-        tvAdaptiveBadge    = findViewById(R.id.tvAdaptiveBadge);
+        btnBack = findViewById(R.id.btnBack);
+        tvPlanTitle = findViewById(R.id.tvPlanTitle);
+        tvProfileSummary = findViewById(R.id.tvProfileSummary);
+        tvAdaptiveBadge = findViewById(R.id.tvAdaptiveBadge);
         cardAdaptiveReason = findViewById(R.id.cardAdaptiveReason);
-        tvAdaptiveReason   = findViewById(R.id.tvAdaptiveReason);
-        layoutPlanDays     = findViewById(R.id.layoutPlanDays);
+        tvAdaptiveReason = findViewById(R.id.tvAdaptiveReason);
+        layoutPlanDays = findViewById(R.id.layoutPlanDays);
     }
 
     private void buildPlan() {
-        SharedPreferences prefs = getSharedPreferences("FitLifePrefs", MODE_PRIVATE);
+        float bmi = sessionManager.getBMI();
+        String goal = sessionManager.getUserGoal();
+        String level = sessionManager.getUserActivityLevel();
+        int streak = sessionManager.getWorkoutStreak();
+        int score = sessionManager.getDisciplineScore();
 
-        float  bmi      = prefs.getFloat("userBMI", 22f);
-        String goal     = prefs.getString("userGoal", "Build Muscle");
-        String level    = prefs.getString("userActivityLevel", "Moderately Active");
-        int    streak   = prefs.getInt("workoutStreak", 0);
-        int    score    = prefs.getInt("disciplineScore", 87);
-
-        // Profile summary
         tvProfileSummary.setText(String.format("BMI: %.1f  |  Goal: %s  |  Level: %s", bmi, goal, level));
 
         if (isAdaptive) {
@@ -62,18 +59,16 @@ public class WorkoutPlanActivity extends AppCompatActivity {
             tvAdaptiveBadge.setVisibility(View.VISIBLE);
             cardAdaptiveReason.setVisibility(View.VISIBLE);
 
-            // Reason logic
             String reason;
-            if (streak == 0)         reason = "Plan lightened — no workouts logged recently. Start slow!";
-            else if (score < 50)     reason = "Intensity reduced — consistency score below 50%. Build the habit first.";
-            else if (streak >= 7)    reason = "Plan intensified — 7+ day streak detected! You're on fire 🔥";
-            else                     reason = "Plan adapted to your current activity level and progress.";
+            if (streak == 0) reason = "Plan lightened — no workouts logged recently. Start slow!";
+            else if (score < 50) reason = "Intensity reduced — consistency score below 50%. Build the habit first.";
+            else if (streak >= 7) reason = "Plan intensified — 7+ day streak detected! You're on fire 🔥";
+            else reason = "Plan adapted to your current activity level and progress.";
             tvAdaptiveReason.setText(reason);
         } else {
             tvPlanTitle.setText("Your Workout Plan");
         }
 
-        // Generate plan based on BMI + goal
         String[][] plan = generatePlan(bmi, goal, level, isAdaptive, score);
 
         String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
@@ -82,26 +77,24 @@ public class WorkoutPlanActivity extends AppCompatActivity {
         }
     }
 
-    // Returns [exerciseName, duration, sets/reps] per day
     private String[][] generatePlan(float bmi, String goal, String level,
                                     boolean adaptive, int score) {
-        // Intensity modifier
         float factor = adaptive ? (score < 50 ? 0.7f : (score >= 80 ? 1.2f : 1.0f)) : 1.0f;
 
         boolean isOverweight = bmi >= 25;
-        boolean isMuscle     = goal.toLowerCase().contains("muscle") || goal.toLowerCase().contains("strength");
-        boolean isCardio     = goal.toLowerCase().contains("weight") || goal.toLowerCase().contains("slim");
-        boolean isBeginner   = level.toLowerCase().contains("sedentary") || level.toLowerCase().contains("light");
+        boolean isMuscle = goal.toLowerCase().contains("muscle") || goal.toLowerCase().contains("strength");
+        boolean isCardio = goal.toLowerCase().contains("weight") || goal.toLowerCase().contains("slim");
+        boolean isBeginner = level.toLowerCase().contains("sedentary") || level.toLowerCase().contains("light");
 
-        int dur = (int)(30 * factor);
-        int durHard = (int)(45 * factor);
+        int dur = (int) (30 * factor);
+        int durHard = (int) (45 * factor);
         String rest = "Rest & Stretching — 15 min";
 
         if (isCardio || isOverweight) {
             return new String[][]{
                     {"Brisk Walk / Jog", dur + " min", "Moderate pace"},
                     {"Cycling or Elliptical", durHard + " min", "Interval: 1 min fast / 2 min slow"},
-                    {"Bodyweight HIIT", (int)(20 * factor) + " min", "3 sets × 10 reps"},
+                    {"Bodyweight HIIT", (int) (20 * factor) + " min", "3 sets × 10 reps"},
                     {"Swimming or Treadmill", dur + " min", "Steady state cardio"},
                     {rest, "15 min", "Yoga / foam roll"},
                     {"Outdoor Run", durHard + " min", "Target 5 km"},
@@ -118,7 +111,6 @@ public class WorkoutPlanActivity extends AppCompatActivity {
                     {"Rest", "—", "Sleep & recovery is growth"}
             };
         } else {
-            // General fitness
             return new String[][]{
                     {"Morning Walk + Core", dur + " min", "3 sets × 15 reps"},
                     {"Yoga / Flexibility", dur + " min", "Sun salutation + stretches"},
@@ -132,7 +124,6 @@ public class WorkoutPlanActivity extends AppCompatActivity {
     }
 
     private void addDayCard(String day, String exercise, String duration, String detail) {
-        // Outer card
         CardView card = new CardView(this);
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -147,7 +138,6 @@ public class WorkoutPlanActivity extends AppCompatActivity {
         row.setPadding(40, 36, 40, 36);
         row.setGravity(Gravity.CENTER_VERTICAL);
 
-        // Day label
         TextView tvDay = new TextView(this);
         tvDay.setText(day.substring(0, 3).toUpperCase());
         tvDay.setTextColor(0xFFE94560);
@@ -155,7 +145,6 @@ public class WorkoutPlanActivity extends AppCompatActivity {
         tvDay.setTypeface(null, android.graphics.Typeface.BOLD);
         tvDay.setMinWidth(120);
 
-        // Details column
         LinearLayout col = new LinearLayout(this);
         col.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams colP = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);

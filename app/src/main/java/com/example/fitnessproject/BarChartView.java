@@ -9,15 +9,26 @@ import android.view.View;
 
 public class BarChartView extends View {
 
-    private float[]  values = {};
+    private float[] values = {};
     private String[] labels = {};
-    private final Paint barPaint   = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint barPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint labelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint valuePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-    public BarChartView(Context ctx) { super(ctx); init(); }
-    public BarChartView(Context ctx, AttributeSet a) { super(ctx, a); init(); }
-    public BarChartView(Context ctx, AttributeSet a, int d) { super(ctx, a, d); init(); }
+    public BarChartView(Context ctx) {
+        super(ctx);
+        init();
+    }
+
+    public BarChartView(Context ctx, AttributeSet a) {
+        super(ctx, a);
+        init();
+    }
+
+    public BarChartView(Context ctx, AttributeSet a, int d) {
+        super(ctx, a, d);
+        init();
+    }
 
     private void init() {
         barPaint.setColor(0xFFE94560);
@@ -45,26 +56,23 @@ public class BarChartView extends View {
 
         int n = values.length;
         float barWidth = (w * 0.6f) / n;
-        float gap      = (w * 0.4f) / (n + 1);
-        float bottomY  = h - 40f;
-        float topPad   = 30f;
+        float gap = (w * 0.4f) / (n + 1);
+        float bottomY = h - 40f;
+        float topPad = 30f;
 
         for (int i = 0; i < n; i++) {
-            float left   = gap * (i + 1) + barWidth * i;
-            float right  = left + barWidth;
-            float barH   = ((values[i] / maxVal) * (bottomY - topPad));
-            float top    = bottomY - barH;
+            float left = gap * (i + 1) + barWidth * i;
+            float right = left + barWidth;
+            float barH = ((values[i] / maxVal) * (bottomY - topPad));
+            float top = bottomY - barH;
 
-            // Draw bar with rounded top
             RectF rect = new RectF(left, top, right, bottomY);
             canvas.drawRoundRect(rect, 10, 10, barPaint);
 
-            // Value above bar
             if (values[i] > 0)
-                canvas.drawText((int)values[i] + "m",
+                canvas.drawText((int) values[i] + "m",
                         left + barWidth / 2, top - 6, valuePaint);
 
-            // Label below
             String lbl = (labels != null && i < labels.length) ? labels[i] : "";
             canvas.drawText(lbl, left + barWidth / 2, bottomY + 28, labelPaint);
         }
