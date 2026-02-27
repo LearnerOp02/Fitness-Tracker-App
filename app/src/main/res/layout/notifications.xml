@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1A1A2E"
+    android:orientation="vertical">
+
+    <!-- Top bar -->
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:paddingTop="48dp" android:paddingStart="16dp" android:paddingEnd="16dp" android:paddingBottom="12dp">
+        <ImageButton android:id="@+id/btnBack" android:layout_width="44dp" android:layout_height="44dp"
+            android:layout_alignParentStart="true" android:layout_centerVertical="true"
+            android:src="@drawable/ic_arrow_back" android:background="@drawable/btn_icon_bg" android:contentDescription="Back" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_centerInParent="true" android:text="Reminders &amp; Alerts"
+            android:textColor="#FFFFFF" android:textSize="18sp" android:textStyle="bold" />
+    </RelativeLayout>
+
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="16dp">
+
+            <!-- Section: Workout reminders -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="WORKOUT REMINDERS" android:textColor="#E94560"
+                android:textSize="11sp" android:textStyle="bold" android:layout_marginBottom="10dp" />
+
+            <!-- Notification item template (×3) -->
+            <androidx.cardview.widget.CardView android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginBottom="10dp"
+                app:cardCornerRadius="14dp" app:cardBackgroundColor="#16213E">
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:padding="16dp">
+                    <TextView android:layout_width="32dp" android:layout_height="32dp"
+                        android:text="🏋" android:textSize="20sp" android:gravity="center"
+                        android:layout_alignParentStart="true" android:layout_centerVertical="true"
+                        android:layout_marginEnd="12dp" android:id="@+id/ic1" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/ic1" android:layout_toStartOf="@+id/sw1"
+                        android:layout_centerVertical="true" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Daily Workout Reminder" android:textColor="#FFFFFF"
+                            android:textSize="14sp" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Every day at 7:00 AM" android:textColor="#AAAAAA" android:textSize="12sp" />
+                    </LinearLayout>
+                    <Switch android:id="@+id/sw1" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true" android:checked="true"
+                        android:thumb="@null" android:track="@null" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginBottom="10dp"
+                app:cardCornerRadius="14dp" app:cardBackgroundColor="#16213E">
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp">
+                    <TextView android:layout_width="32dp" android:layout_height="32dp"
+                        android:text="🔥" android:textSize="20sp" android:gravity="center"
+                        android:layout_alignParentStart="true" android:layout_centerVertical="true"
+                        android:layout_marginEnd="12dp" android:id="@+id/ic2" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/ic2" android:layout_toStartOf="@+id/sw2"
+                        android:layout_centerVertical="true" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Streak Alert" android:textColor="#FFFFFF"
+                            android:textSize="14sp" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Notify before streak breaks" android:textColor="#AAAAAA" android:textSize="12sp" />
+                    </LinearLayout>
+                    <Switch android:id="@+id/sw2" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true" android:checked="true"
+                        android:thumb="@null" android:track="@null" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Section: Health reminders -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="HEALTH REMINDERS" android:textColor="#E94560"
+                android:textSize="11sp" android:textStyle="bold"
+                android:layout_marginTop="8dp" android:layout_marginBottom="10dp" />
+
+            <androidx.cardview.widget.CardView android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginBottom="10dp"
+                app:cardCornerRadius="14dp" app:cardBackgroundColor="#16213E">
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp">
+                    <TextView android:layout_width="32dp" android:layout_height="32dp"
+                        android:text="💧" android:textSize="20sp" android:gravity="center"
+                        android:layout_alignParentStart="true" android:layout_centerVertical="true"
+                        android:layout_marginEnd="12dp" android:id="@+id/ic3" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/ic3" android:layout_toStartOf="@+id/sw3"
+                        android:layout_centerVertical="true" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Water Intake Reminder" android:textColor="#FFFFFF"
+                            android:textSize="14sp" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Every 2 hours, 8AM–8PM" android:textColor="#AAAAAA" android:textSize="12sp" />
+                    </LinearLayout>
+                    <Switch android:id="@+id/sw3" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true" android:checked="false"
+                        android:thumb="@null" android:track="@null" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginBottom="10dp"
+                app:cardCornerRadius="14dp" app:cardBackgroundColor="#16213E">
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp">
+                    <TextView android:layout_width="32dp" android:layout_height="32dp"
+                        android:text="🚶" android:textSize="20sp" android:gravity="center"
+                        android:layout_alignParentStart="true" android:layout_centerVertical="true"
+                        android:layout_marginEnd="12dp" android:id="@+id/ic4" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/ic4" android:layout_toStartOf="@+id/sw4"
+                        android:layout_centerVertical="true" android:orientation="vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Inactivity Alert" android:textColor="#FFFFFF"
+                            android:textSize="14sp" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="Remind after 1 hour of sitting" android:textColor="#AAAAAA" android:textSize="12sp" />
+                    </LinearLayout>
+                    <Switch android:id="@+id/sw4" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true" android:checked="true"
+                        android:thumb="@null" android:track="@null" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Save button -->
+            <Button android:id="@+id/btnSaveNotifications" android:layout_width="match_parent"
+                android:layout_height="52dp" android:layout_marginTop="8dp"
+                android:background="@drawable/btn_primary_bg"
+                android:text="SAVE PREFERENCES" android:textColor="#FFFFFF"
+                android:textSize="15sp" android:textStyle="bold" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

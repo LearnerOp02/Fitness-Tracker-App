@@ -3,11 +3,14 @@ package com.example.fitnessproject;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -22,8 +25,8 @@ public class HomeActivity extends AppCompatActivity {
     private ProgressBar progressWorkout;
     private Button     btnStartWorkout;
     private CardView   cardAddWorkout, cardViewProgress, cardMyProfile, cardNutrition;
+    private ImageButton btnNotification;
 
-    // Track back-press for exit confirmation
     private boolean backPressedOnce = false;
 
     @Override
@@ -33,9 +36,9 @@ public class HomeActivity extends AppCompatActivity {
         initViews();
         loadDashboard();
         setupQuickActions();
+        setupLogout();
     }
 
-    // Refresh dashboard every time user returns from another screen
     @Override
     protected void onResume() {
         super.onResume();
@@ -57,12 +60,12 @@ public class HomeActivity extends AppCompatActivity {
         cardViewProgress  = findViewById(R.id.cardViewProgress);
         cardMyProfile     = findViewById(R.id.cardMyProfile);
         cardNutrition     = findViewById(R.id.cardNutrition);
+        btnNotification   = findViewById(R.id.btnNotification);
     }
 
     private void loadDashboard() {
         SharedPreferences prefs = getSharedPreferences("FitLifePrefs", MODE_PRIVATE);
 
-        // ── Time-based greeting ──
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         String greeting;
         if      (hour < 12) greeting = "Good Morning,";
@@ -70,11 +73,9 @@ public class HomeActivity extends AppCompatActivity {
         else                greeting = "Good Evening,";
         tvGreeting.setText(greeting);
 
-        // ── User name ──
         String name = prefs.getString("userName", "Athlete");
         tvUserName.setText(name + " 💪");
 
-        // ── BMI ──
         float bmi = prefs.getFloat("userBMI", 0f);
         if (bmi > 0) {
             tvBMI.setText(String.format("%.1f", bmi));
@@ -92,15 +93,12 @@ public class HomeActivity extends AppCompatActivity {
             tvBMIStatus.setTextColor(0xFFAAAAAA);
         }
 
-        // ── Discipline Score ──
         int score = prefs.getInt("disciplineScore", 87);
         tvDisciplineScore.setText(String.valueOf(score));
 
-        // ── Streak ──
         int streak = prefs.getInt("workoutStreak", 12);
         tvStreak.setText("🔥 " + streak);
 
-        // ── Today's workout ──
         String workoutTitle = prefs.getString("todayWorkout", "Upper Body Strength");
         int completed       = prefs.getInt("workoutCompleted", 2);
         int total           = prefs.getInt("workoutTotal", 6);
@@ -112,16 +110,14 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setupQuickActions() {
-
         btnStartWorkout.setOnClickListener(v -> {
-            // Increment completed count for demo
             SharedPreferences prefs = getSharedPreferences("FitLifePrefs", MODE_PRIVATE);
             int completed = prefs.getInt("workoutCompleted", 2);
             int total     = prefs.getInt("workoutTotal", 6);
             if (completed < total) {
                 prefs.edit().putInt("workoutCompleted", completed + 1).apply();
                 Toast.makeText(this, "Exercise " + (completed + 1) + " completed! 🔥", Toast.LENGTH_SHORT).show();
-                loadDashboard(); // Refresh progress bar
+                loadDashboard();
             } else {
                 Toast.makeText(this, "All exercises done today! Great job! 🏆", Toast.LENGTH_SHORT).show();
             }
@@ -133,7 +129,6 @@ public class HomeActivity extends AppCompatActivity {
         cardViewProgress.setOnClickListener(v ->
                 Toast.makeText(this, "Progress Tracker — coming soon!", Toast.LENGTH_SHORT).show());
 
-        // Profile card → go to ProfileSetupActivity to edit
         cardMyProfile.setOnClickListener(v ->
                 startActivity(new Intent(HomeActivity.this, ProfileSetupActivity.class)));
 
@@ -141,7 +136,17 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.makeText(this, "Nutrition Log — coming soon!", Toast.LENGTH_SHORT).show());
     }
 
-    // ── Logout helper (can be called from menu) ──────────────────────────────
+    private void setupLogout() {
+        btnNotification.setOnClickListener(v -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Logout")
+                    .setMessage("Are you sure you want to logout?")
+                    .setPositiveButton("Yes", (dialog, which) -> logout())
+                    .setNegativeButton("No", null)
+                    .show();
+        });
+    }
+
     public void logout() {
         getSharedPreferences("FitLifePrefs", MODE_PRIVATE)
                 .edit()
@@ -149,5 +154,19 @@ public class HomeActivity extends AppCompatActivity {
                 .apply();
         startActivity(new Intent(this, LoginActivity.class));
         finishAffinity();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (backPressedOnce) {
+            super.onBackPressed();
+            finishAffinity();
+            return;
+        }
+
+        backPressedOnce = true;
+        Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(() -> backPressedOnce = false, 2000);
     }
 }

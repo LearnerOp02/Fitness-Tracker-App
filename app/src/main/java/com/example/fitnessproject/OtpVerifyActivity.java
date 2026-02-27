@@ -19,7 +19,6 @@ import java.util.Locale;
 
 public class OtpVerifyActivity extends AppCompatActivity {
 
-    // ── Views (IDs match activity_otp_verify.xml exactly) ───────────────────
     private ImageButton btnBack;
     private TextView    tvOtpEmail;
     private TextView    tvCountdown;
@@ -27,20 +26,16 @@ public class OtpVerifyActivity extends AppCompatActivity {
     private Button      btnVerifyOtp;
     private EditText    etOtp1, etOtp2, etOtp3, etOtp4, etOtp5, etOtp6;
 
-    // ── Class-level array built after all fields assigned ────────────────────
     private EditText[] otpBoxes;
-
     private String          userEmail    = "";
     private static final String STATIC_OTP = "123456";
     private CountDownTimer  countDownTimer;
 
-    // ────────────────────────────────────────────────────────────────────────
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.otp_verify);
 
-        // Receive email passed from ForgotPasswordActivity
         userEmail = getIntent().getStringExtra("email");
         if (userEmail == null) userEmail = "";
 
@@ -50,7 +45,6 @@ public class OtpVerifyActivity extends AppCompatActivity {
         startCountdown();
     }
 
-    // ── Bind every view to its XML id ────────────────────────────────────────
     private void initViews() {
         btnBack      = findViewById(R.id.btnBack);
         tvOtpEmail   = findViewById(R.id.tvOtpEmail);
@@ -65,14 +59,10 @@ public class OtpVerifyActivity extends AppCompatActivity {
         etOtp5 = findViewById(R.id.etOtp5);
         etOtp6 = findViewById(R.id.etOtp6);
 
-        // Build array AFTER individual fields are assigned
         otpBoxes = new EditText[]{ etOtp1, etOtp2, etOtp3, etOtp4, etOtp5, etOtp6 };
-
-        // Show the email the OTP was sent to
         tvOtpEmail.setText(userEmail);
     }
 
-    // ── Auto-jump focus box → box as user types ───────────────────────────────
     private void setupOtpAutoFocus() {
         for (int i = 0; i < otpBoxes.length; i++) {
             final int idx = i;
@@ -84,11 +74,9 @@ public class OtpVerifyActivity extends AppCompatActivity {
                 @Override
                 public void afterTextChanged(Editable s) {
                     if (s.length() == 1) {
-                        // Move forward
                         if (idx < otpBoxes.length - 1) {
                             otpBoxes[idx + 1].requestFocus();
                         }
-                        // Auto-verify when last box filled
                         if (idx == otpBoxes.length - 1) {
                             new Handler().postDelayed(() -> verifyOtp(), 200);
                         }
@@ -96,7 +84,6 @@ public class OtpVerifyActivity extends AppCompatActivity {
                 }
             });
 
-            // Backspace on empty box → move back
             otpBoxes[i].setOnKeyListener((v, keyCode, event) -> {
                 if (keyCode == KeyEvent.KEYCODE_DEL
                         && event.getAction() == KeyEvent.ACTION_DOWN
@@ -111,9 +98,7 @@ public class OtpVerifyActivity extends AppCompatActivity {
         }
     }
 
-    // ── Button / link listeners ───────────────────────────────────────────────
     private void setupListeners() {
-
         btnBack.setOnClickListener(v -> finish());
 
         btnVerifyOtp.setOnClickListener(v -> verifyOtp());
@@ -126,7 +111,6 @@ public class OtpVerifyActivity extends AppCompatActivity {
         });
     }
 
-    // ── Collect OTP and validate ──────────────────────────────────────────────
     private void verifyOtp() {
         String entered = etOtp1.getText().toString().trim()
                 + etOtp2.getText().toString().trim()
@@ -163,11 +147,9 @@ public class OtpVerifyActivity extends AppCompatActivity {
         }, 800);
     }
 
-    // ── 2-minute countdown ────────────────────────────────────────────────────
     private void startCountdown() {
         if (countDownTimer != null) countDownTimer.cancel();
 
-        // Disable resend until timer finishes
         tvResendOtp.setEnabled(false);
         tvResendOtp.setAlpha(0.4f);
 
@@ -190,7 +172,6 @@ public class OtpVerifyActivity extends AppCompatActivity {
         }.start();
     }
 
-    // ── Helper ────────────────────────────────────────────────────────────────
     private void clearOtpBoxes() {
         for (EditText box : otpBoxes) box.setText("");
         etOtp1.requestFocus();

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -63,7 +64,6 @@ public class RegisterActivity extends AppCompatActivity {
     private void setupListeners() {
         btnRegister.setOnClickListener(v -> attemptRegister());
 
-        // Go back to Login
         tvLogin.setOnClickListener(v -> {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             finish();
@@ -77,47 +77,49 @@ public class RegisterActivity extends AppCompatActivity {
         String confirmPassword = etConfirmPassword.getText().toString().trim();
         String phone           = etPhone.getText().toString().trim();
 
-        // ── Validation ──
         if (TextUtils.isEmpty(name)) {
-            etFullName.setError("Full name is required");
+            etFullName.setError(getString(R.string.error_field_required));
             etFullName.requestFocus(); return;
         }
         if (TextUtils.isEmpty(email)) {
-            etEmail.setError("Email is required");
+            etEmail.setError(getString(R.string.error_field_required));
             etEmail.requestFocus(); return;
         }
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etEmail.setError("Enter a valid email address");
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.setError(getString(R.string.error_valid_email));
             etEmail.requestFocus(); return;
         }
         if (TextUtils.isEmpty(password)) {
-            etPassword.setError("Password is required");
+            etPassword.setError(getString(R.string.error_field_required));
             etPassword.requestFocus(); return;
         }
         if (password.length() < 6) {
-            etPassword.setError("Minimum 6 characters required");
+            etPassword.setError(getString(R.string.error_password_min));
             etPassword.requestFocus(); return;
         }
         if (!password.equals(confirmPassword)) {
-            etConfirmPassword.setError("Passwords do not match");
+            etConfirmPassword.setError(getString(R.string.error_password_mismatch));
             etConfirmPassword.requestFocus(); return;
         }
         if (TextUtils.isEmpty(phone)) {
-            etPhone.setError("Phone number is required");
+            etPhone.setError(getString(R.string.error_field_required));
             etPhone.requestFocus(); return;
         }
         if (phone.length() < 10) {
-            etPhone.setError("Enter a valid 10-digit phone number");
+            etPhone.setError(getString(R.string.error_phone_valid));
+            etPhone.requestFocus(); return;
+        }
+        if (!Patterns.PHONE.matcher(phone).matches()) {
+            etPhone.setError("Enter a valid phone number");
             etPhone.requestFocus(); return;
         }
         if (spinnerGoal.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, "Please select a fitness goal", Toast.LENGTH_SHORT).show(); return;
+            Toast.makeText(this, getString(R.string.error_select_goal), Toast.LENGTH_SHORT).show(); return;
         }
         if (!cbTerms.isChecked()) {
-            Toast.makeText(this, "Please agree to the Terms & Privacy Policy", Toast.LENGTH_SHORT).show(); return;
+            Toast.makeText(this, getString(R.string.error_agree_terms), Toast.LENGTH_SHORT).show(); return;
         }
 
-        // Show loading state
         btnRegister.setEnabled(false);
         btnRegister.setText("Creating Account...");
 
@@ -127,22 +129,20 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void registerUser(String name, String email, String password,
                               String phone, String goal) {
-        // Save user credentials and details to SharedPreferences
         getSharedPreferences("FitLifePrefs", MODE_PRIVATE)
                 .edit()
                 .putString("userName",    name)
                 .putString("userEmail",   email)
-                .putString("userPassword", password)   // saved for login check
+                .putString("userPassword", password)
                 .putString("userPhone",   phone)
                 .putString("userGoal",    goal)
                 .putBoolean("isLoggedIn", true)
-                .putBoolean("profileComplete", false)  // profile setup still needed
+                .putBoolean("profileComplete", false)
                 .apply();
 
         Toast.makeText(this,
                 "Account created! Let's set up your profile.", Toast.LENGTH_LONG).show();
 
-        // Go to Profile Setup (not Home — profile is not done yet)
         startActivity(new Intent(RegisterActivity.this, ProfileSetupActivity.class));
         finishAffinity();
     }

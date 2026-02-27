@@ -1,4 +1,132 @@
-<resources>
-    <string name="app_name">FitnessProject</string>
-    <string name="hello">Hello</string>
+<?xml version="1.0" encoding="utf-8"?>
+    <resources>
+        <string name="app_name">FitLife</string>
+        <string name="tagline">Train. Achieve. Repeat.</string>
+
+        <!-- Login -->
+        <string name="welcome_back">Welcome Back!</string>
+        <string name="email">Email Address</string>
+        <string name="password">Password</string>
+        <string name="login">LOG IN</string>
+        <string name="forgot_password">Forgot Password?</string>
+        <string name="no_account">Don\'t have an account? </string>
+        <string name="sign_up">Sign Up</string>
+        <string name="continue_google">Continue with Google</string>
+
+        <!-- Register -->
+        <string name="create_account">Create Your Account</string>
+        <string name="full_name">Full Name</string>
+        <string name="confirm_password">Confirm Password</string>
+        <string name="phone_number">Phone Number</string>
+        <string name="fitness_goal">Fitness Goal</string>
+        <string name="terms_agree">I agree to the Terms and Privacy Policy</string>
+        <string name="create_account_btn">CREATE ACCOUNT</string>
+        <string name="already_have_account">Already have an account? </string>
+
+        <!-- Profile Setup -->
+        <string name="setup_profile">Setup Your Profile</string>
+        <string name="setup_subtitle">We use this to personalize your fitness plan</string>
+        <string name="personal_info">PERSONAL INFO</string>
+        <string name="body_measurements">BODY MEASUREMENTS</string>
+        <string name="fitness_goal_title">FITNESS GOAL</string>
+        <string name="age">Age (years)</string>
+        <string name="age_hint">e.g. 25</string>
+        <string name="gender">Gender</string>
+        <string name="male">Male</string>
+        <string name="female">Female</string>
+        <string name="other">Other</string>
+        <string name="height">Height (cm)</string>
+        <string name="height_hint">e.g. 175</string>
+        <string name="weight">Weight (kg)</string>
+        <string name="weight_hint">e.g. 70</string>
+        <string name="your_bmi">Your BMI</string>
+        <string name="activity_level">Activity Level</string>
+        <string name="save_continue">SAVE &amp; CONTINUE</string>
+
+        <!-- Home -->
+        <string name="good_morning">Good Morning,</string>
+        <string name="good_afternoon">Good Afternoon,</string>
+        <string name="good_evening">Good Evening,</string>
+        <string name="bmi">BMI</string>
+        <string name="score">Score</string>
+        <string name="streak">Day Streak</string>
+        <string name="todays_workout">Today\'s Workout Plan</string>
+        <string name="quick_actions">Quick Actions</string>
+        <string name="add_workout">Add Workout</string>
+        <string name="view_progress">View Progress</string>
+        <string name="my_profile">My Profile</string>
+        <string name="nutrition">Nutrition</string>
+        <string name="keep_going">Keep Going!</string>
+        <string name="excellent">Excellent</string>
+
+        <!-- Forgot Password -->
+        <string name="forgot_title">Forgot Password?</string>
+        <string name="forgot_subtitle">Enter your registered email address. We\'ll send you a 6-digit OTP to reset your password.</string>
+        <string name="email_address">Email Address</string>
+        <string name="send_otp">SEND OTP</string>
+        <string name="remember_password">Remember your password? </string>
+        <string name="step_1">Step 1 of 3</string>
+
+        <!-- OTP Verify -->
+        <string name="verify_otp">Verify OTP</string>
+        <string name="otp_subtitle">We sent a 6-digit code to</string>
+        <string name="enter_otp">Enter 6-Digit OTP</string>
+        <string name="verify_otp_btn">VERIFY OTP</string>
+        <string name="didnt_receive">Didn\'t receive OTP? </string>
+        <string name="resend">Resend</string>
+        <string name="step_2">Step 2 of 3</string>
+
+        <!-- Reset Password -->
+        <string name="new_password">New Password</string>
+        <string name="reset_subtitle">Create a strong new password for your account.</string>
+        <string name="new_password_label">New Password</string>
+        <string name="confirm_new_password">Confirm New Password</string>
+        <string name="reset_password_btn">RESET PASSWORD</string>
+        <string name="step_3">Step 3 of 3</string>
+
+        <!-- Reset Success -->
+        <string name="password_reset">Password Reset!</string>
+        <string name="reset_success_message">Your password has been successfully reset. You can now log in with your new password.</string>
+        <string name="go_to_login">GO TO LOGIN</string>
+
+        <!-- Error Messages -->
+        <string name="error_field_required">This field is required</string>
+        <string name="error_valid_email">Enter a valid email address</string>
+        <string name="error_password_min">Minimum 6 characters required</string>
+        <string name="error_password_mismatch">Passwords do not match</string>
+        <string name="error_phone_valid">Enter a valid 10-digit phone number</string>
+        <string name="error_select_goal">Please select a fitness goal</string>
+        <string name="error_agree_terms">Please agree to the Terms &amp; Privacy Policy</string>
+        <string name="error_age_range">Enter valid age (10–100)</string>
+        <string name="error_invalid_otp">Please enter the complete 6-digit OTP</string>
+        <string name="error_weak_password">Weak password</string>
+        <string name="error_moderate_password">Moderate password</string>
+        <string name="error_network">No internet connection. Please check your network.</string>
+
+        <!-- Success Messages -->
+        <string name="success_otp_sent">OTP sent to %1$s</string>
+        <string name="success_otp_verified">OTP Verified! ✓</string>
+        <string name="success_password_reset">Password reset successfully!</string>
+        <string name="success_profile_saved">Profile saved! Let\'s go! 🚀</string>
+        <string name="success_account_created">Account created! Let\'s set up your profile.</string>
+        <string name="success_welcome_back">Welcome back! 💪</string>
+
+        <!-- Hint Messages -->
+        <string name="hint_credentials">Invalid credentials.\nHint: admin@fitlife.com / fitlife123</string>
+        <string name="hint_otp">Invalid OTP. Try again.\nHint: 123456</string>
+
+        <!-- Dialog Messages -->
+        <string name="dialog_logout_title">Logout</string>
+        <string name="dialog_logout_message">Are you sure you want to logout?</string>
+        <string name="dialog_exit_profile_title">Exit Profile Setup</string>
+        <string name="dialog_exit_profile_message">Your profile is not complete. Are you sure you want to exit?</string>
+        <string name="dialog_yes">Yes</string>
+        <string name="dialog_no">No</string>
+
+        <!-- Coming Soon -->
+        <string name="coming_soon_add_workout">Add Workout — coming soon!</string>
+        <string name="coming_soon_progress">Progress Tracker — coming soon!</string>
+        <string name="coming_soon_nutrition">Nutrition Log — coming soon!</string>
+        <string name="coming_soon_google">Google Sign-In coming soon!</string>
+    <string name="your_password_has_been_successfully_reset_you_can_now_log_in_with_your_new_password">Your password has been successfully reset. You can now log in with your new password.</string>
 </resources>

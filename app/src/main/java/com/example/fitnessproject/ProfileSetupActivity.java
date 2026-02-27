@@ -9,12 +9,14 @@ import android.text.TextWatcher;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ProfileSetupActivity extends AppCompatActivity {
@@ -24,6 +26,7 @@ public class ProfileSetupActivity extends AppCompatActivity {
     private Spinner    spinnerProfileGoal, spinnerActivityLevel;
     private Button     btnSaveProfile;
     private TextView   tvBMIValue, tvBMICategory;
+    private ImageButton btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,7 @@ public class ProfileSetupActivity extends AppCompatActivity {
         btnSaveProfile       = findViewById(R.id.btnSaveProfile);
         tvBMIValue           = findViewById(R.id.tvBMIValue);
         tvBMICategory        = findViewById(R.id.tvBMICategory);
+        btnBack              = findViewById(R.id.btnBack);
     }
 
     private void setupSpinners() {
@@ -72,7 +76,6 @@ public class ProfileSetupActivity extends AppCompatActivity {
         spinnerActivityLevel.setAdapter(levelAdapter);
     }
 
-    // ── Live BMI calculation as user types ───────────────────────────────────
     private void setupBMIListener() {
         TextWatcher watcher = new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int i, int c, int a) {}
@@ -113,9 +116,27 @@ public class ProfileSetupActivity extends AppCompatActivity {
         } catch (NumberFormatException ignored) {}
     }
 
-    // ── Save & Continue ──────────────────────────────────────────────────────
     private void setupListeners() {
         btnSaveProfile.setOnClickListener(v -> saveProfile());
+
+        btnBack.setOnClickListener(v -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Exit Profile Setup")
+                    .setMessage("Your profile is not complete. Are you sure you want to exit?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        SharedPreferences prefs = getSharedPreferences("FitLifePrefs", MODE_PRIVATE);
+                        boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
+
+                        if (isLoggedIn) {
+                            startActivity(new Intent(this, HomeActivity.class));
+                        } else {
+                            startActivity(new Intent(this, LoginActivity.class));
+                        }
+                        finishAffinity();
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+        });
     }
 
     private void saveProfile() {
@@ -123,7 +144,6 @@ public class ProfileSetupActivity extends AppCompatActivity {
         String height = etHeight.getText().toString().trim();
         String weight = etWeight.getText().toString().trim();
 
-        // Validation
         if (TextUtils.isEmpty(age)) {
             etAge.setError("Age is required"); etAge.requestFocus(); return;
         }
@@ -144,16 +164,13 @@ public class ProfileSetupActivity extends AppCompatActivity {
             Toast.makeText(this, "Please select your activity level", Toast.LENGTH_SHORT).show(); return;
         }
 
-        // Get gender selection
         int genderId = rgGender.getCheckedRadioButtonId();
         RadioButton genderBtn = findViewById(genderId);
         String gender = genderBtn != null ? genderBtn.getText().toString() : "Male";
 
-        // Calculate BMI
         double heightM = Double.parseDouble(height) / 100.0;
         double bmi     = Double.parseDouble(weight) / (heightM * heightM);
 
-        // Save everything to SharedPreferences
         getSharedPreferences("FitLifePrefs", MODE_PRIVATE).edit()
                 .putString("userAge",           age)
                 .putString("userHeight",         height)
@@ -167,7 +184,6 @@ public class ProfileSetupActivity extends AppCompatActivity {
 
         Toast.makeText(this, "Profile saved! Let's go! 🚀", Toast.LENGTH_SHORT).show();
 
-        // Navigate to Home Dashboard
         startActivity(new Intent(ProfileSetupActivity.this, HomeActivity.class));
         finishAffinity();
     }

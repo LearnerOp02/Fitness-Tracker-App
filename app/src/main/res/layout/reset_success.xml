@@ -28,7 +28,7 @@
     <TextView
         android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:text="Your password has been successfully reset. You can now log in with your new password."
+        android:text="@string/your_password_has_been_successfully_reset_you_can_now_log_in_with_your_new_password"
         android:textColor="#AAAAAA"
         android:textSize="14sp"
         android:gravity="center"
