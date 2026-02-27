@@ -1,8 +1,3 @@
-Here is your **professional `README.md`** content for GitHub 👇
-You can copy-paste this directly into your `README.md` file.
-
----
-
 # 🏋️ Fitness & Activity Tracker with Personalized Workout Plans
 
 A full-stack Android fitness tracking application that helps users monitor workouts, track progress, calculate BMI, and receive adaptive workout plans based on behavior and consistency.
