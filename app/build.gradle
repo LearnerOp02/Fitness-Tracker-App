@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.fitnessproject"
-        minSdk 23
+        minSdk 24
         targetSdk 36
         versionCode 1
         versionName "1.0"
@@ -41,9 +41,9 @@ dependencies {
 
     // Material Design & UI Components
     implementation libs.androidx.appcompat.v161
-    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'com.google.android.material:material:1.13.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation libs.androidx.cardview
 
     // Lifecycle
     implementation libs.androidx.lifecycle.runtime.ktx
@@ -54,4 +54,5 @@ dependencies {
     androidTestImplementation libs.androidx.espresso.core
 
     // Remove all Compose dependencies - we don't need them
+
 }

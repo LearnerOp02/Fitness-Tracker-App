@@ -9,25 +9,31 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
+        android:name=".FitnessApplication"
         android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FitnessProject"
-        android:name=".FitnessApplication">
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
 
         <!-- Splash Screen -->
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -35,105 +41,123 @@
         </activity>
 
         <!-- Auth Flow -->
-        <activity android:name=".LoginActivity"
+        <activity
+            android:name=".LoginActivity"
             android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name=".RegisterActivity"
+        <activity
+            android:name=".RegisterActivity"
             android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
         <!-- Password Reset Flow -->
-        <activity android:name=".ForgetPasswordActivity"
+        <activity
+            android:name=".ForgetPasswordActivity"
             android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name=".OtpVerifyActivity"
+        <activity
+            android:name=".OtpVerifyActivity"
             android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name=".ResetPasswordActivity"
+        <activity
+            android:name=".ResetPasswordActivity"
             android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name=".ResetSuccessActivity"
+        <activity
+            android:name=".ResetSuccessActivity"
             android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar" />
 
         <!-- Main App -->
-        <activity android:name=".ProfileSetupActivity"
+        <activity
+            android:name=".ProfileSetupActivity"
             android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name=".HomeActivity"
+        <activity
+            android:name=".HomeActivity"
             android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
-            android:screenOrientation="portrait" />
-
-        <activity android:name=".AddWorkoutActivity"
-            android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar" />
+
+        <activity
+            android:name=".AddWorkoutActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name=".WorkoutHistoryActivity"
+        <activity
+            android:name=".WorkoutHistoryActivity"
             android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
-            android:screenOrientation="portrait" />
-
-        <activity android:name=".MonthlyProgressActivity"
-            android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
-            android:screenOrientation="portrait" />
-
-        <activity android:name=".BmiCalculatorActivity"
-            android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar" />
+
+        <activity
+            android:name=".MonthlyProgressActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar" />
+
+        <activity
+            android:name=".BmiCalculatorActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name=".WorkoutPlanActivity"
+        <activity
+            android:name=".WorkoutPlanActivity"
             android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar" />
 
-        <activity android:name=".DisciplineScoreActivity"
+        <activity
+            android:name=".DisciplineScoreActivity"
             android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar" />
 
-        <activity android:name=".VisualProgressActivity"
+        <activity
+            android:name=".VisualProgressActivity"
             android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar" />
 
-        <activity android:name=".NotificationsActivity"
+        <activity
+            android:name=".NotificationsActivity"
             android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar" />
 
-        <activity android:name=".SettingsActivity"
+        <activity
+            android:name=".SettingsActivity"
             android:exported="false"
-            android:theme="@style/Theme.FitnessProject.NoActionBar"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.FitnessProject.NoActionBar" />
 
-        <activity android:name=".LogoutConfirmActivity"
+        <activity
+            android:name=".LogoutConfirmActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Translucent"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent" />
 
     </application>
 </manifest>

@@ -33,7 +33,17 @@ public class ProfileSetupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_setup);
 
-        sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
+        try {
+            if (getApplication() instanceof FitnessApplication) {
+                sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
+            } else {
+                sessionManager = new UserSessionManager(this);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            sessionManager = new UserSessionManager(this);
+        }
+
         initViews();
         setupSpinners();
         setupBMIListener();
@@ -63,7 +73,7 @@ public class ProfileSetupActivity extends AppCompatActivity {
         ArrayAdapter<String> goalAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, goals);
         goalAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerProfileGoal.setAdapter(goalAdapter);
+        if (spinnerProfileGoal != null) spinnerProfileGoal.setAdapter(goalAdapter);
 
         String[] levels = {
                 "Select Activity Level",
@@ -76,61 +86,71 @@ public class ProfileSetupActivity extends AppCompatActivity {
         ArrayAdapter<String> levelAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, levels);
         levelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerActivityLevel.setAdapter(levelAdapter);
+        if (spinnerActivityLevel != null) spinnerActivityLevel.setAdapter(levelAdapter);
     }
 
     private void loadExistingProfile() {
-        String height = sessionManager.getUserHeight();
-        String weight = sessionManager.getUserWeight();
-        String age = sessionManager.getUserAge();
-        String gender = sessionManager.getUserGender();
-        String goal = sessionManager.getUserGoal();
-        String level = sessionManager.getUserActivityLevel();
+        try {
+            String height = sessionManager.getUserHeight();
+            String weight = sessionManager.getUserWeight();
+            String age = sessionManager.getUserAge();
+            String gender = sessionManager.getUserGender();
+            String goal = sessionManager.getUserGoal();
+            String level = sessionManager.getUserActivityLevel();
 
-        if (!height.isEmpty()) etHeight.setText(height);
-        if (!weight.isEmpty()) etWeight.setText(weight);
-        if (!age.isEmpty()) etAge.setText(age);
+            if (!height.isEmpty() && etHeight != null) etHeight.setText(height);
+            if (!weight.isEmpty() && etWeight != null) etWeight.setText(weight);
+            if (!age.isEmpty() && etAge != null) etAge.setText(age);
 
-        if (gender.equals("Male")) rgGender.check(R.id.rbMale);
-        else if (gender.equals("Female")) rgGender.check(R.id.rbFemale);
-        else if (gender.equals("Other")) rgGender.check(R.id.rbOther);
-
-        // Set spinner selections
-        for (int i = 0; i < spinnerProfileGoal.getCount(); i++) {
-            if (spinnerProfileGoal.getItemAtPosition(i).toString().equals(goal)) {
-                spinnerProfileGoal.setSelection(i);
-                break;
+            if (rgGender != null) {
+                if (gender.equals("Male")) rgGender.check(R.id.rbMale);
+                else if (gender.equals("Female")) rgGender.check(R.id.rbFemale);
+                else if (gender.equals("Other")) rgGender.check(R.id.rbOther);
             }
-        }
 
-        for (int i = 0; i < spinnerActivityLevel.getCount(); i++) {
-            if (spinnerActivityLevel.getItemAtPosition(i).toString().equals(level)) {
-                spinnerActivityLevel.setSelection(i);
-                break;
+            if (spinnerProfileGoal != null) {
+                for (int i = 0; i < spinnerProfileGoal.getCount(); i++) {
+                    if (spinnerProfileGoal.getItemAtPosition(i).toString().equals(goal)) {
+                        spinnerProfileGoal.setSelection(i);
+                        break;
+                    }
+                }
             }
+
+            if (spinnerActivityLevel != null) {
+                for (int i = 0; i < spinnerActivityLevel.getCount(); i++) {
+                    if (spinnerActivityLevel.getItemAtPosition(i).toString().equals(level)) {
+                        spinnerActivityLevel.setSelection(i);
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private void setupBMIListener() {
-        TextWatcher watcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int i, int c, int a) {
-            }
+        if (etHeight != null && etWeight != null) {
+            TextWatcher watcher = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int i, int c, int a) {}
 
-            @Override
-            public void onTextChanged(CharSequence s, int i, int b, int c) {
-            }
+                @Override
+                public void onTextChanged(CharSequence s, int i, int b, int c) {}
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                calculateBMI();
-            }
-        };
-        etHeight.addTextChangedListener(watcher);
-        etWeight.addTextChangedListener(watcher);
+                @Override
+                public void afterTextChanged(Editable s) {
+                    calculateBMI();
+                }
+            };
+            etHeight.addTextChangedListener(watcher);
+            etWeight.addTextChangedListener(watcher);
+        }
     }
 
     private void calculateBMI() {
+        if (etHeight == null || etWeight == null || tvBMIValue == null || tvBMICategory == null) return;
         String h = etHeight.getText().toString().trim();
         String w = etWeight.getText().toString().trim();
 
@@ -172,26 +192,38 @@ public class ProfileSetupActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        btnSaveProfile.setOnClickListener(v -> saveProfile());
+        if (btnSaveProfile != null) btnSaveProfile.setOnClickListener(v -> saveProfile());
 
-        btnBack.setOnClickListener(v -> {
-            new AlertDialog.Builder(this)
-                    .setTitle("Exit Profile Setup")
-                    .setMessage("Your profile is not complete. Are you sure you want to exit?")
-                    .setPositiveButton("Yes", (dialog, which) -> {
-                        if (sessionManager.isLoggedIn()) {
-                            startActivity(new Intent(this, HomeActivity.class));
-                        } else {
-                            startActivity(new Intent(this, LoginActivity.class));
-                        }
-                        finishAffinity();
-                    })
-                    .setNegativeButton("No", null)
-                    .show();
-        });
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> {
+                new AlertDialog.Builder(this)
+                        .setTitle("Exit Profile Setup")
+                        .setMessage("Your profile is not complete. Are you sure you want to exit?")
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            if (sessionManager.isLoggedIn()) {
+                                Intent intent = new Intent(this, HomeActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            } else {
+                                Intent intent = new Intent(this, LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }
+                            finishAffinity();
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
+            });
+        }
     }
 
     private void saveProfile() {
+        if (etAge == null || etHeight == null || etWeight == null ||
+                spinnerProfileGoal == null || spinnerActivityLevel == null || rgGender == null) {
+            Toast.makeText(this, "UI initialization error", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String age = etAge.getText().toString().trim();
         String height = etHeight.getText().toString().trim();
         String weight = etWeight.getText().toString().trim();
@@ -244,7 +276,9 @@ public class ProfileSetupActivity extends AppCompatActivity {
 
         Toast.makeText(this, "Profile saved! Let's go! 🚀", Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(ProfileSetupActivity.this, HomeActivity.class));
+        Intent intent = new Intent(ProfileSetupActivity.this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
         finishAffinity();
     }
 }

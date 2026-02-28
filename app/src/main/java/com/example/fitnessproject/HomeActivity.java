@@ -71,90 +71,104 @@ public class HomeActivity extends AppCompatActivity {
         if (hour < 12) greeting = "Good Morning,";
         else if (hour < 17) greeting = "Good Afternoon,";
         else greeting = "Good Evening,";
-        tvGreeting.setText(greeting);
+        if (tvGreeting != null) tvGreeting.setText(greeting);
 
         String name = sessionManager.getUserName();
-        tvUserName.setText(name + " 💪");
+        if (tvUserName != null) tvUserName.setText(name + " 💪");
 
         float bmi = sessionManager.getBMI();
-        if (bmi > 0) {
-            tvBMI.setText(String.format("%.1f", bmi));
-            String status;
-            int color;
-            if (bmi < 18.5) {
-                status = "Underweight";
-                color = 0xFF2196F3;
-            } else if (bmi < 25.0) {
-                status = "Normal";
-                color = 0xFF4CAF50;
-            } else if (bmi < 30.0) {
-                status = "Overweight";
-                color = 0xFFFF9800;
+        if (tvBMI != null && tvBMIStatus != null) {
+            if (bmi > 0) {
+                tvBMI.setText(String.format("%.1f", bmi));
+                String status;
+                int color;
+                if (bmi < 18.5) {
+                    status = "Underweight";
+                    color = 0xFF2196F3;
+                } else if (bmi < 25.0) {
+                    status = "Normal";
+                    color = 0xFF4CAF50;
+                } else if (bmi < 30.0) {
+                    status = "Overweight";
+                    color = 0xFFFF9800;
+                } else {
+                    status = "Obese";
+                    color = 0xFFF44336;
+                }
+                tvBMIStatus.setText(status);
+                tvBMIStatus.setTextColor(color);
+                tvBMI.setTextColor(color);
             } else {
-                status = "Obese";
-                color = 0xFFF44336;
+                tvBMI.setText("N/A");
+                tvBMIStatus.setText("Set Profile");
+                tvBMIStatus.setTextColor(0xFFAAAAAA);
             }
-            tvBMIStatus.setText(status);
-            tvBMIStatus.setTextColor(color);
-            tvBMI.setTextColor(color);
-        } else {
-            tvBMI.setText("N/A");
-            tvBMIStatus.setText("Set Profile");
-            tvBMIStatus.setTextColor(0xFFAAAAAA);
         }
 
         int score = sessionManager.getDisciplineScore();
-        tvDisciplineScore.setText(String.valueOf(score));
+        if (tvDisciplineScore != null) tvDisciplineScore.setText(String.valueOf(score));
 
         int streak = sessionManager.getWorkoutStreak();
-        tvStreak.setText("🔥 " + streak);
+        if (tvStreak != null) tvStreak.setText("🔥 " + streak);
 
         String workoutTitle = sessionManager.getTodayWorkout();
         int completed = sessionManager.getWorkoutCompleted();
         int total = sessionManager.getWorkoutTotal();
         int progressPercent = (total > 0) ? (completed * 100 / total) : 0;
 
-        tvWorkoutTitle.setText(workoutTitle);
-        tvWorkoutProgress.setText(completed + " / " + total + " completed");
-        progressWorkout.setProgress(progressPercent);
+        if (tvWorkoutTitle != null) tvWorkoutTitle.setText(workoutTitle);
+        if (tvWorkoutProgress != null) tvWorkoutProgress.setText(completed + " / " + total + " completed");
+        if (progressWorkout != null) progressWorkout.setProgress(progressPercent);
     }
 
     private void setupQuickActions() {
-        btnStartWorkout.setOnClickListener(v -> {
-            int completed = sessionManager.getWorkoutCompleted();
-            int total = sessionManager.getWorkoutTotal();
-            if (completed < total) {
-                sessionManager.incrementWorkoutCompleted();
-                sessionManager.incrementDisciplineScore(2);
-                Toast.makeText(this, "Exercise " + (completed + 1) + " completed! 🔥", Toast.LENGTH_SHORT).show();
-                loadDashboard();
-            } else {
-                Toast.makeText(this, "All exercises done today! Great job! 🏆", Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (btnStartWorkout != null) {
+            btnStartWorkout.setOnClickListener(v -> {
+                int completed = sessionManager.getWorkoutCompleted();
+                int total = sessionManager.getWorkoutTotal();
+                if (completed < total) {
+                    sessionManager.incrementWorkoutCompleted();
+                    sessionManager.incrementDisciplineScore(2);
+                    Toast.makeText(this, "Exercise " + (completed + 1) + " completed! 🔥", Toast.LENGTH_SHORT).show();
+                    loadDashboard();
+                } else {
+                    Toast.makeText(this, "All exercises done today! Great job! 🏆", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
-        cardAddWorkout.setOnClickListener(v ->
-                startActivity(new Intent(HomeActivity.this, AddWorkoutActivity.class)));
+        if (cardAddWorkout != null) {
+            cardAddWorkout.setOnClickListener(v ->
+                    startActivity(new Intent(HomeActivity.this, AddWorkoutActivity.class)));
+        }
 
-        cardViewProgress.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, MonthlyProgressActivity.class);
-            startActivity(intent);
-        });
+        if (cardViewProgress != null) {
+            cardViewProgress.setOnClickListener(v -> {
+                Intent intent = new Intent(HomeActivity.this, MonthlyProgressActivity.class);
+                startActivity(intent);
+            });
+        }
 
-        cardMyProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, ProfileSetupActivity.class);
-            startActivity(intent);
-        });
+        if (cardMyProfile != null) {
+            cardMyProfile.setOnClickListener(v -> {
+                Intent intent = new Intent(HomeActivity.this, ProfileSetupActivity.class);
+                startActivity(intent);
+            });
+        }
 
-        cardNutrition.setOnClickListener(v ->
-                Toast.makeText(this, "Nutrition Log — coming soon!", Toast.LENGTH_SHORT).show());
+        if (cardNutrition != null) {
+            cardNutrition.setOnClickListener(v ->
+                    Toast.makeText(this, "Nutrition Log — coming soon!", Toast.LENGTH_SHORT).show());
+        }
     }
 
     private void setupLogout() {
-        btnNotification.setOnClickListener(v -> {
-            Intent intent = new Intent(HomeActivity.this, SettingsActivity.class);
-            startActivity(intent);
-        });
+        if (btnNotification != null) {
+            btnNotification.setOnClickListener(v -> {
+                Intent intent = new Intent(HomeActivity.this, SettingsActivity.class);
+                startActivity(intent);
+            });
+        }
     }
 
     public void logout() {

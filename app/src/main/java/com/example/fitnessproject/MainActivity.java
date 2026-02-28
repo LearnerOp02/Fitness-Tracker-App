@@ -1,6 +1,7 @@
 package com.example.fitnessproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.animation.AlphaAnimation;
@@ -21,52 +22,82 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
-
+        // Initialize views
         ImageView logo = findViewById(R.id.splashLogo);
         TextView appName = findViewById(R.id.appName);
         TextView tagline = findViewById(R.id.tagline);
 
-        // Scale animation for logo
-        ScaleAnimation scaleAnim = new ScaleAnimation(
-                0f, 1f, 0f, 1f,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f);
-        scaleAnim.setDuration(800);
-        scaleAnim.setFillAfter(true);
-        logo.startAnimation(scaleAnim);
+        // Check if views exist (safety check)
+        if (logo == null || appName == null || tagline == null) {
+            // If views are missing, navigate directly
+            new Handler().postDelayed(this::navigateNext, 100);
+            return;
+        }
 
-        // Fade in app name
-        AlphaAnimation fadeInName = new AlphaAnimation(0f, 1f);
-        fadeInName.setDuration(1000);
-        fadeInName.setStartOffset(600);
-        fadeInName.setFillAfter(true);
-        appName.startAnimation(fadeInName);
+        try {
+            // Initialize session manager
+            if (getApplication() instanceof FitnessApplication) {
+                sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
+            } else {
+                sessionManager = new UserSessionManager(this);
+            }
 
-        // Fade in tagline
-        AlphaAnimation fadeInTag = new AlphaAnimation(0f, 1f);
-        fadeInTag.setDuration(1000);
-        fadeInTag.setStartOffset(1000);
-        fadeInTag.setFillAfter(true);
-        tagline.startAnimation(fadeInTag);
+            // Apply animations
+            ScaleAnimation scaleAnim = new ScaleAnimation(
+                    0f, 1f, 0f, 1f,
+                    Animation.RELATIVE_TO_SELF, 0.5f,
+                    Animation.RELATIVE_TO_SELF, 0.5f);
+            scaleAnim.setDuration(800);
+            scaleAnim.setFillAfter(true);
+            logo.startAnimation(scaleAnim);
 
-        // After delay → decide where to go
+            AlphaAnimation fadeInName = new AlphaAnimation(0f, 1f);
+            fadeInName.setDuration(1000);
+            fadeInName.setStartOffset(600);
+            fadeInName.setFillAfter(true);
+            appName.startAnimation(fadeInName);
+
+            AlphaAnimation fadeInTag = new AlphaAnimation(0f, 1f);
+            fadeInTag.setDuration(1000);
+            fadeInTag.setStartOffset(1000);
+            fadeInTag.setFillAfter(true);
+            tagline.startAnimation(fadeInTag);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // If any error, just navigate
+            new Handler().postDelayed(this::navigateNext, 100);
+            return;
+        }
+
+        // Navigate after delay
         new Handler().postDelayed(this::navigateNext, SPLASH_DELAY);
     }
 
     private void navigateNext() {
-        boolean isLoggedIn = sessionManager.isLoggedIn();
-        boolean profileComplete = sessionManager.isProfileComplete();
+        try {
+            if (sessionManager == null) {
+                sessionManager = new UserSessionManager(this);
+            }
 
-        Intent intent;
-        if (isLoggedIn && profileComplete) {
-            intent = new Intent(this, HomeActivity.class);
-        } else if (isLoggedIn) {
-            intent = new Intent(this, ProfileSetupActivity.class);
-        } else {
-            intent = new Intent(this, LoginActivity.class);
+            boolean isLoggedIn = sessionManager.isLoggedIn();
+            boolean profileComplete = sessionManager.isProfileComplete();
+
+            Intent intent;
+            if (isLoggedIn && profileComplete) {
+                intent = new Intent(this, HomeActivity.class);
+            } else if (isLoggedIn) {
+                intent = new Intent(this, ProfileSetupActivity.class);
+            } else {
+                intent = new Intent(this, LoginActivity.class);
+            }
+            startActivity(intent);
+            finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Fallback to LoginActivity
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
         }
-        startActivity(intent);
-        finish();
     }
 }

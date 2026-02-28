@@ -28,7 +28,17 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
-        sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
+        try {
+            if (getApplication() instanceof FitnessApplication) {
+                sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
+            } else {
+                sessionManager = new UserSessionManager(this);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            sessionManager = new UserSessionManager(this);
+        }
+
         initViews();
         setupListeners();
     }
@@ -36,8 +46,12 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (sessionManager.isLoggedIn()) {
-            goToNext();
+        try {
+            if (sessionManager != null && sessionManager.isLoggedIn()) {
+                goToNext();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -51,25 +65,42 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        btnLogin.setOnClickListener(v -> attemptLogin());
+        if (btnLogin != null) btnLogin.setOnClickListener(v -> attemptLogin());
 
-        btnGoogleLogin.setOnClickListener(v ->
-                Toast.makeText(this, "Google Sign-In coming soon!", Toast.LENGTH_SHORT).show());
+        if (btnGoogleLogin != null) {
+            btnGoogleLogin.setOnClickListener(v ->
+                    Toast.makeText(this, "Google Sign-In coming soon!", Toast.LENGTH_SHORT).show());
+        }
 
-        tvForgotPassword.setOnClickListener(v ->
-                startActivity(new Intent(LoginActivity.this, ForgetPasswordActivity.class)));
+        if (tvForgotPassword != null) {
+            tvForgotPassword.setOnClickListener(v -> {
+                Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
+                startActivity(intent);
+            });
+        }
 
-        tvSignUp.setOnClickListener(v ->
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
+        if (tvSignUp != null) {
+            tvSignUp.setOnClickListener(v -> {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            });
+        }
     }
 
     private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        try {
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true;
+        }
     }
 
     private void attemptLogin() {
+        if (etLoginEmail == null || etLoginPassword == null || btnLogin == null) return;
+
         if (!isNetworkConnected()) {
             Toast.makeText(this, "No internet connection. Please check your network.", Toast.LENGTH_LONG).show();
             return;
@@ -106,41 +137,73 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser(String email, String password) {
-        String savedEmail = sessionManager.getUserEmail();
-        String savedPassword = sessionManager.getUserPassword();
+        try {
+            String savedEmail = sessionManager.getUserEmail();
+            String savedPassword = sessionManager.getUserPassword();
 
-        boolean staticMatch = email.equals(STATIC_EMAIL) && password.equals(STATIC_PASSWORD);
-        boolean registeredMatch = email.equals(savedEmail) && password.equals(savedPassword);
+            boolean staticMatch = email.equals(STATIC_EMAIL) && password.equals(STATIC_PASSWORD);
+            boolean registeredMatch = email.equals(savedEmail) && password.equals(savedPassword);
 
-        if (staticMatch || registeredMatch) {
-            if (staticMatch) {
-                sessionManager.createLoginSession("Admin User", email, password);
+            if (staticMatch || registeredMatch) {
+                if (staticMatch) {
+                    sessionManager.createLoginSession("Admin User", email, password);
+                }
+
+                Toast.makeText(this, "Welcome back! 💪", Toast.LENGTH_SHORT).show();
+                goToNext();
+
+            } else {
+                if (btnLogin != null) {
+                    btnLogin.setEnabled(true);
+                    btnLogin.setText("LOG IN");
+                }
+                if (etLoginPassword != null) {
+                    etLoginPassword.setError("Invalid email or password");
+                    etLoginPassword.requestFocus();
+                }
+                Toast.makeText(this,
+                        "Invalid credentials.\nHint: admin@fitlife.com / fitlife123",
+                        Toast.LENGTH_LONG).show();
             }
-
-            Toast.makeText(this, "Welcome back! 💪", Toast.LENGTH_SHORT).show();
-            goToNext();
-
-        } else {
-            btnLogin.setEnabled(true);
-            btnLogin.setText("LOG IN");
-            etLoginPassword.setError("Invalid email or password");
-            etLoginPassword.requestFocus();
-            Toast.makeText(this,
-                    "Invalid credentials.\nHint: admin@fitlife.com / fitlife123",
-                    Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (btnLogin != null) {
+                btnLogin.setEnabled(true);
+                btnLogin.setText("LOG IN");
+            }
+            Toast.makeText(this, "Login error. Please try again.", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void goToNext() {
-        boolean profileComplete = sessionManager.isProfileComplete();
-        Intent intent;
+        try {
+            if (sessionManager == null) {
+                sessionManager = new UserSessionManager(this);
+            }
+            boolean profileComplete = sessionManager.isProfileComplete();
+            Intent intent;
 
-        if (profileComplete) {
-            intent = new Intent(this, HomeActivity.class);
-        } else {
-            intent = new Intent(this, ProfileSetupActivity.class);
+            if (profileComplete) {
+                intent = new Intent(LoginActivity.this, HomeActivity.class);
+            } else {
+                intent = new Intent(LoginActivity.this, ProfileSetupActivity.class);
+            }
+
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                Intent intent = new Intent(LoginActivity.this, ProfileSetupActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Toast.makeText(this, "Error navigating. Please restart app.", Toast.LENGTH_LONG).show();
+            }
         }
-        startActivity(intent);
-        finish();
     }
 }

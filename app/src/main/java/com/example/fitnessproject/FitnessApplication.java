@@ -11,7 +11,11 @@ public class FitnessApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-        sessionManager = new UserSessionManager(this);
+        try {
+            sessionManager = new UserSessionManager(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static synchronized FitnessApplication getInstance() {
@@ -19,6 +23,9 @@ public class FitnessApplication extends Application {
     }
 
     public UserSessionManager getSessionManager() {
+        if (sessionManager == null) {
+            sessionManager = new UserSessionManager(this);
+        }
         return sessionManager;
     }
 
