@@ -35,4 +35,13 @@
         <item name="colorPrimary">#E94560</item>
     </style>
 
+    <style name="SplashTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_gradient_bg</item>
+        <item name="android:windowAnimationStyle">@style/SplashAnimation</item>
+    </style>
+
+    <style name="SplashAnimation">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
 </resources>

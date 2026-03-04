@@ -1,68 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A1A2E"
-    android:orientation="vertical">
+    android:background="@drawable/splash_gradient_bg"
+    tools:context=".MainActivity">
 
-    <!-- Logo / App Icon -->
-    <ImageView
-        android:id="@+id/splashLogo"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="200dp"
-        android:src="@drawable/ic_fitness_logo"
-        android:contentDescription="App Logo" />
-
-    <!-- App Name -->
-    <TextView
-        android:id="@+id/appName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/splashLogo"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="FitLife"
-        android:textColor="#E94560"
-        android:textSize="42sp"
-        android:textStyle="bold"
-        android:fontFamily="sans-serif-condensed" />
-
-    <!-- Tagline -->
-    <TextView
-        android:id="@+id/tagline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/appName"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:text="Train. Achieve. Repeat."
-        android:textColor="#AAAAAA"
-        android:textSize="16sp"
-        android:letterSpacing="0.1" />
-
-    <!-- Progress Bar -->
-    <ProgressBar
-        android:id="@+id/splashProgress"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+    <!-- Animated Background Circles -->
+    <View
+        android:id="@+id/circle1"
         android:layout_width="200dp"
-        android:layout_height="4dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="80dp"
-        android:indeterminate="true"
-        android:progressTint="#E94560" />
+        android:layout_height="200dp"
+        android:background="@drawable/circle_bg_primary"
+        android:alpha="0.3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.1" />
 
-    <!-- Version Text -->
-    <TextView
-        android:layout_width="wrap_content"
+    <View
+        android:id="@+id/circle2"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@drawable/circle_bg_accent"
+        android:alpha="0.2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <!-- Main Content Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/contentCard"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"
-        android:text="v1.0.0"
-        android:textColor="#555555"
-        android:textSize="12sp" />
+        android:layout_margin="32dp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="20dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible">
 
-</RelativeLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="32dp">
+
+            <!-- Animated Logo Container -->
+            <FrameLayout
+                android:id="@+id/logoContainer"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:background="@drawable/logo_background"
+                android:padding="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/splashLogo"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_fitness_logo"
+                    android:contentDescription="App Logo"
+                    app:tint="@color/primary" />
+
+                <!-- Pulse Effect Overlay -->
+                <View
+                    android:id="@+id/pulseView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/pulse_effect"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <!-- App Name - Using system font -->
+            <TextView
+                android:id="@+id/appName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="FitLife"
+                android:textColor="@color/primary"
+                android:textSize="48sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.05"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/logoContainer" />
+
+            <!-- Tagline - Using system font -->
+            <TextView
+                android:id="@+id/tagline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Train. Achieve. Repeat."
+                android:textColor="#757575"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                android:alpha="0.8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/appName" />
+
+            <!-- Modern Progress Indicator -->
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/splashProgress"
+                android:layout_width="200dp"
+                android:layout_height="8dp"
+                android:layout_marginTop="48dp"
+                android:layout_marginBottom="16dp"
+                app:indicatorColor="@color/progress_gradient_start"
+                app:trackColor="#E0E0E0"
+                app:trackCornerRadius="4dp"
+                app:showAnimationBehavior="inward"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tagline" />
+
+            <!-- Version with Badge -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/versionCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:cardBackgroundColor="#F5F5F5"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/splashProgress">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp"
+                    android:text="v1.0.0"
+                    android:textColor="#757575"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-medium" />
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
