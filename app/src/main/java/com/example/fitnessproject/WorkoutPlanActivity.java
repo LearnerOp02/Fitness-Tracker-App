@@ -4,21 +4,21 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
+import androidx.appcompat.widget.Toolbar;
 
-public class WorkoutPlanActivity extends AppCompatActivity {
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.chip.Chip;
 
-    private ImageButton btnBack;
-    private TextView tvPlanTitle, tvProfileSummary, tvAdaptiveBadge,
-            tvAdaptiveReason;
-    private CardView cardAdaptiveReason;
+public class WorkoutPlanActivity extends BaseActivity {
+
+    private Toolbar toolbar;
+    private MaterialCardView profileCard, adaptiveCard;
+    private TextView tvPlanTitle, tvProfileSummary, tvAdaptiveReason;
+    private Chip chipAdaptiveBadge;
     private LinearLayout layoutPlanDays;
-    private UserSessionManager sessionManager;
 
     private boolean isAdaptive = false;
 
@@ -27,22 +27,38 @@ public class WorkoutPlanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.workout_plan);
 
-        sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
         isAdaptive = getIntent().getBooleanExtra("adaptive", false);
 
         initViews();
+        setupToolbar();
         buildPlan();
-        btnBack.setOnClickListener(v -> finish());
+        startAnimations();
     }
 
     private void initViews() {
-        btnBack = findViewById(R.id.btnBack);
+        circle1 = findViewById(R.id.circle1);
+        circle2 = findViewById(R.id.circle2);
+        toolbar = findViewById(R.id.toolbar);
+        profileCard = findViewById(R.id.profileCard);
+//        adaptiveCard = findViewById(R.id.adaptiveCard);
         tvPlanTitle = findViewById(R.id.tvPlanTitle);
         tvProfileSummary = findViewById(R.id.tvProfileSummary);
-        tvAdaptiveBadge = findViewById(R.id.tvAdaptiveBadge);
-        cardAdaptiveReason = findViewById(R.id.cardAdaptiveReason);
         tvAdaptiveReason = findViewById(R.id.tvAdaptiveReason);
+//        chipAdaptiveBadge = findViewById(R.id.chipAdaptiveBadge);
         layoutPlanDays = findViewById(R.id.layoutPlanDays);
+    }
+
+    private void setupToolbar() {
+        setupToolbar(toolbar, isAdaptive ? "Adaptive Plan" : "Workout Plan", true);
+    }
+
+    private void startAnimations() {
+        animateBackgroundCircles();
+        animateCard(profileCard, 0);
+        if (isAdaptive) {
+            animateCard(adaptiveCard, 150);
+        }
+        // Plan days will be animated as they're added
     }
 
     private void buildPlan() {
@@ -56,24 +72,29 @@ public class WorkoutPlanActivity extends AppCompatActivity {
 
         if (isAdaptive) {
             tvPlanTitle.setText("Adaptive Workout Plan");
-            tvAdaptiveBadge.setVisibility(View.VISIBLE);
-            cardAdaptiveReason.setVisibility(View.VISIBLE);
+            chipAdaptiveBadge.setVisibility(View.VISIBLE);
+            adaptiveCard.setVisibility(View.VISIBLE);
 
             String reason;
-            if (streak == 0) reason = "Plan lightened — no workouts logged recently. Start slow!";
-            else if (score < 50) reason = "Intensity reduced — consistency score below 50%. Build the habit first.";
-            else if (streak >= 7) reason = "Plan intensified — 7+ day streak detected! You're on fire 🔥";
-            else reason = "Plan adapted to your current activity level and progress.";
+            if (streak == 0) {
+                reason = "Plan lightened — no workouts logged recently. Start slow!";
+            } else if (score < 50) {
+                reason = "Intensity reduced — consistency score below 50%. Build the habit first.";
+            } else if (streak >= 7) {
+                reason = "Plan intensified — 7+ day streak detected! You're on fire 🔥";
+            } else {
+                reason = "Plan adapted to your current activity level and progress.";
+            }
             tvAdaptiveReason.setText(reason);
         } else {
             tvPlanTitle.setText("Your Workout Plan");
         }
 
         String[][] plan = generatePlan(bmi, goal, level, isAdaptive, score);
-
         String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+
         for (int i = 0; i < days.length; i++) {
-            addDayCard(days[i], plan[i][0], plan[i][1], plan[i][2]);
+            addDayCard(days[i], plan[i][0], plan[i][1], plan[i][2], i * 100);
         }
     }
 
@@ -84,7 +105,6 @@ public class WorkoutPlanActivity extends AppCompatActivity {
         boolean isOverweight = bmi >= 25;
         boolean isMuscle = goal.toLowerCase().contains("muscle") || goal.toLowerCase().contains("strength");
         boolean isCardio = goal.toLowerCase().contains("weight") || goal.toLowerCase().contains("slim");
-        boolean isBeginner = level.toLowerCase().contains("sedentary") || level.toLowerCase().contains("light");
 
         int dur = (int) (30 * factor);
         int durHard = (int) (45 * factor);
@@ -123,15 +143,17 @@ public class WorkoutPlanActivity extends AppCompatActivity {
         }
     }
 
-    private void addDayCard(String day, String exercise, String duration, String detail) {
-        CardView card = new CardView(this);
+    private void addDayCard(String day, String exercise, String duration, String detail, long delay) {
+        MaterialCardView card = new MaterialCardView(this);
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         cardParams.setMargins(0, 0, 0, 12);
         card.setLayoutParams(cardParams);
-        card.setCardBackgroundColor(0xFF16213E);
+        card.setCardBackgroundColor(getResources().getColor(R.color.surface));
         card.setRadius(40f);
         card.setCardElevation(4f);
+        card.setStrokeColor(getResources().getColor(R.color.primary));
+        card.setStrokeWidth(1);
 
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
@@ -140,14 +162,15 @@ public class WorkoutPlanActivity extends AppCompatActivity {
 
         TextView tvDay = new TextView(this);
         tvDay.setText(day.substring(0, 3).toUpperCase());
-        tvDay.setTextColor(0xFFE94560);
+        tvDay.setTextColor(getResources().getColor(R.color.primary));
         tvDay.setTextSize(12f);
         tvDay.setTypeface(null, android.graphics.Typeface.BOLD);
         tvDay.setMinWidth(120);
 
         LinearLayout col = new LinearLayout(this);
         col.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams colP = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        LinearLayout.LayoutParams colP = new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
         col.setLayoutParams(colP);
 
         TextView tvExercise = new TextView(this);
@@ -158,7 +181,7 @@ public class WorkoutPlanActivity extends AppCompatActivity {
 
         TextView tvDetail = new TextView(this);
         tvDetail.setText(duration + "  ·  " + detail);
-        tvDetail.setTextColor(0xFFAAAAAA);
+        tvDetail.setTextColor(getResources().getColor(R.color.text_secondary));
         tvDetail.setTextSize(11f);
         tvDetail.setLineSpacing(4f, 1f);
 
@@ -169,5 +192,16 @@ public class WorkoutPlanActivity extends AppCompatActivity {
         row.addView(col);
         card.addView(row);
         layoutPlanDays.addView(card);
+
+        // Animate the card
+        card.setAlpha(0f);
+        card.setTranslationY(50f);
+        handler.postDelayed(() -> {
+            card.animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(400)
+                    .start();
+        }, delay + 200);
     }
 }

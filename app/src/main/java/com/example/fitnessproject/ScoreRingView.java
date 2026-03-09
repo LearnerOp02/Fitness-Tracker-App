@@ -7,6 +7,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.core.content.ContextCompat;
+
 public class ScoreRingView extends View {
 
     private final Paint bgRingPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -33,7 +35,7 @@ public class ScoreRingView extends View {
     private void init() {
         bgRingPaint.setStyle(Paint.Style.STROKE);
         bgRingPaint.setStrokeWidth(18f);
-        bgRingPaint.setColor(0xFF2A2A5A);
+        bgRingPaint.setColor(ContextCompat.getColor(getContext(), R.color.stroke));
         bgRingPaint.setStrokeCap(Paint.Cap.ROUND);
 
         fgRingPaint.setStyle(Paint.Style.STROKE);
@@ -44,14 +46,18 @@ public class ScoreRingView extends View {
         textPaint.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
 
         subTextPaint.setTextAlign(Paint.Align.CENTER);
-        subTextPaint.setColor(0xFFAAAAAA);
+        subTextPaint.setColor(ContextCompat.getColor(getContext(), R.color.text_secondary));
     }
 
     public void setScore(int score) {
         this.score = Math.max(0, Math.min(100, score));
-        if (score < 40) fgRingPaint.setColor(0xFFF44336);
-        else if (score < 70) fgRingPaint.setColor(0xFFFF9800);
-        else fgRingPaint.setColor(0xFF4CAF50);
+        if (score < 40) {
+            fgRingPaint.setColor(ContextCompat.getColor(getContext(), R.color.obese));
+        } else if (score < 70) {
+            fgRingPaint.setColor(ContextCompat.getColor(getContext(), R.color.overweight));
+        } else {
+            fgRingPaint.setColor(ContextCompat.getColor(getContext(), R.color.normal));
+        }
         textPaint.setColor(fgRingPaint.getColor());
         invalidate();
     }
@@ -64,13 +70,17 @@ public class ScoreRingView extends View {
 
         RectF oval = new RectF(cx - r, cy - r, cx + r, cy + r);
 
+        // Draw background ring
         canvas.drawArc(oval, -90, 360, false, bgRingPaint);
 
+        // Draw foreground ring (score)
         canvas.drawArc(oval, -90, score * 3.6f, false, fgRingPaint);
 
+        // Draw score text
         textPaint.setTextSize(r * 0.65f);
         canvas.drawText(String.valueOf(score), cx, cy + r * 0.22f, textPaint);
 
+        // Draw "/100" text
         subTextPaint.setTextSize(r * 0.22f);
         canvas.drawText("/ 100", cx, cy + r * 0.52f, subTextPaint);
     }

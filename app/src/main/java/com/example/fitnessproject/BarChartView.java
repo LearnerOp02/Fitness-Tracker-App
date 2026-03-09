@@ -7,6 +7,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.core.content.ContextCompat;
+
 public class BarChartView extends View {
 
     private float[] values = {};
@@ -31,8 +33,8 @@ public class BarChartView extends View {
     }
 
     private void init() {
-        barPaint.setColor(0xFFE94560);
-        labelPaint.setColor(0xFFAAAAAA);
+        barPaint.setColor(ContextCompat.getColor(getContext(), R.color.primary));
+        labelPaint.setColor(ContextCompat.getColor(getContext(), R.color.text_secondary));
         labelPaint.setTextSize(28f);
         labelPaint.setTextAlign(Paint.Align.CENTER);
         valuePaint.setColor(0xFFFFFFFF);
@@ -50,6 +52,7 @@ public class BarChartView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         if (values == null || values.length == 0) return;
+
         int w = getWidth(), h = getHeight();
         float maxVal = 1;
         for (float v : values) if (v > maxVal) maxVal = v;
@@ -69,9 +72,10 @@ public class BarChartView extends View {
             RectF rect = new RectF(left, top, right, bottomY);
             canvas.drawRoundRect(rect, 10, 10, barPaint);
 
-            if (values[i] > 0)
+            if (values[i] > 0) {
                 canvas.drawText((int) values[i] + "m",
                         left + barWidth / 2, top - 6, valuePaint);
+            }
 
             String lbl = (labels != null && i < labels.length) ? labels[i] : "";
             canvas.drawText(lbl, left + barWidth / 2, bottomY + 28, labelPaint);

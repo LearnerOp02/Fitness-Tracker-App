@@ -1,40 +1,53 @@
 package com.example.fitnessproject;
 
 import android.os.Bundle;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.card.MaterialCardView;
 
 import org.json.JSONArray;
 
-public class DisciplineScoreActivity extends AppCompatActivity {
+public class DisciplineScoreActivity extends BaseActivity {
 
-    private ImageButton btnBack;
+    private Toolbar toolbar;
+    private MaterialCardView scoreCard;
     private ScoreRingView scoreRingView;
     private TextView tvScoreGrade, tvStreakCount, tvCompletionRate,
             tvTotalLogged, tvScoreTips;
-    private UserSessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.discipline_score);
 
-        sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
         initViews();
+        setupToolbar();
         loadData();
-        btnBack.setOnClickListener(v -> finish());
+        startAnimations();
     }
 
     private void initViews() {
-        btnBack = findViewById(R.id.btnBack);
+        circle1 = findViewById(R.id.circle1);
+        circle2 = findViewById(R.id.circle2);
+        toolbar = findViewById(R.id.toolbar);
+        scoreCard = findViewById(R.id.scoreCard);
         scoreRingView = findViewById(R.id.scoreRingView);
         tvScoreGrade = findViewById(R.id.tvScoreGrade);
         tvStreakCount = findViewById(R.id.tvStreakCount);
         tvCompletionRate = findViewById(R.id.tvCompletionRate);
         tvTotalLogged = findViewById(R.id.tvTotalLogged);
         tvScoreTips = findViewById(R.id.tvScoreTips);
+    }
+
+    private void setupToolbar() {
+        setupToolbar(toolbar, "Discipline Score", true);
+    }
+
+    private void startAnimations() {
+        animateBackgroundCircles();
+        animateCard(scoreCard, 0);
     }
 
     private void loadData() {
@@ -44,8 +57,7 @@ public class DisciplineScoreActivity extends AppCompatActivity {
         int total = 0;
         try {
             total = new JSONArray(sessionManager.getWorkoutHistory()).length();
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
 
         int completed = sessionManager.getWorkoutCompleted();
         int totalPlan = sessionManager.getWorkoutTotal();

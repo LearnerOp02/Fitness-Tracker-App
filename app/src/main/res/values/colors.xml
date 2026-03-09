@@ -1,10 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Primary Colors -->
     <color name="primary">#E94560</color>
     <color name="primary_dark">#C73E55</color>
+    <color name="primary_light">#FF6B6B</color>
+
+    <!-- Accent Colors -->
     <color name="accent">#4ECDC4</color>
+    <color name="accent_dark">#3DB8B0</color>
+    <color name="accent_light">#6FD9D1</color>
+
+    <!-- Background Colors -->
     <color name="background">#1A1A2E</color>
     <color name="surface">#16213E</color>
+    <color name="surface_light">#1E1E3A</color>
+    <color name="surface_dark">#0F3460</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#AAAAAA</color>
+    <color name="text_hint">#666666</color>
+    <color name="text_disabled">#555555</color>
+
+    <!-- Status Colors -->
+    <color name="underweight">#2196F3</color>
+    <color name="normal">#4CAF50</color>
+    <color name="overweight">#FF9800</color>
+    <color name="obese">#F44336</color>
+
+    <!-- Gradient Colors -->
+    <color name="gradient_start">#E94560</color>
+    <color name="gradient_center">#FF6B6B</color>
+    <color name="gradient_end">#FF8E8E</color>
+
+    <!-- Progress Colors -->
     <color name="progress_gradient_start">#E94560</color>
-    <color name="progress_gradient_end">#FF6B6B</color>
+    <color name="progress_gradient_center">#FF6B6B</color>
+    <color name="progress_gradient_end">#FF8E8E</color>
+
+    <!-- Stroke/Border Colors -->
+    <color name="stroke">#333355</color>
+    <color name="stroke_light">#444466</color>
+    <color name="stroke_dark">#222244</color>
+
+    <!-- Card Colors -->
+    <color name="card_background">#16213E</color>
+    <color name="card_background_light">#1E1E3A</color>
+    <color name="card_background_dark">#0F3460</color>
+    <color name="card_stroke">#E94560</color>
+
+    <!-- Button Colors -->
+    <color name="button_primary">#E94560</color>
+    <color name="button_primary_pressed">#C73E55</color>
+    <color name="button_primary_disabled">#66333355</color>
+    <color name="button_outline_stroke">#E94560</color>
+    <color name="button_outline_text">#FFFFFF</color>
+
+    <!-- Icon Colors -->
+    <color name="icon_primary">#E94560</color>
+    <color name="icon_secondary">#AAAAAA</color>
+    <color name="icon_white">#FFFFFF</color>
+
+    <!-- Input Field Colors -->
+    <color name="input_background">#1E1E3A</color>
+    <color name="input_stroke">#E94560</color>
+    <color name="input_stroke_focused">#FF6B6B</color>
+    <color name="input_text">#FFFFFF</color>
+    <color name="input_hint">#666666</color>
+
+    <!-- Switch/Toggle Colors -->
+    <color name="switch_track_on">#E94560</color>
+    <color name="switch_track_off">#444466</color>
+    <color name="switch_thumb">#FFFFFF</color>
+
+    <!-- Chip Colors -->
+    <color name="chip_background">#33E94560</color>
+    <color name="chip_stroke">#E94560</color>
+    <color name="chip_text">#FFFFFF</color>
+
+    <!-- Dialog Colors -->
+    <color name="dialog_background">#16213E</color>
+    <color name="dialog_title">#FFFFFF</color>
+    <color name="dialog_message">#AAAAAA</color>
+    <color name="dialog_positive_button">#E94560</color>
+    <color name="dialog_negative_button">#AAAAAA</color>
+
+    <!-- Tab Colors -->
+    <color name="tab_text">#AAAAAA</color>
+    <color name="tab_text_selected">#E94560</color>
+    <color name="tab_indicator">#E94560</color>
+
+    <!-- Bottom Sheet Colors -->
+    <color name="bottom_sheet_background">#16213E</color>
+    <color name="bottom_sheet_handle">#444466</color>
+
+    <!-- Progress Bar Colors -->
+    <color name="progress_track">#333355</color>
+    <color name="progress_fill">#E94560</color>
+
+    <!-- Divider Colors -->
+    <color name="divider">#333355</color>
+    <color name="divider_light">#444466</color>
+
+    <!-- Notification Colors -->
+    <color name="notification_success">#4CAF50</color>
+    <color name="notification_warning">#FF9800</color>
+    <color name="notification_error">#F44336</color>
+    <color name="notification_info">#2196F3</color>
+
+    <!-- BMI Category Colors -->
+    <color name="bmi_underweight">#2196F3</color>
+    <color name="bmi_normal">#4CAF50</color>
+    <color name="bmi_overweight">#FF9800</color>
+    <color name="bmi_obese">#F44336</color>
+
+    <!-- Score Colors -->
+    <color name="score_excellent">#4CAF50</color>
+    <color name="score_good">#FFB300</color>
+    <color name="score_fair">#FF9800</color>
+    <color name="score_needs_work">#F44336</color>
+
+    <!-- Streak Colors -->
+    <color name="streak_active">#FF6B35</color>
+    <color name="streak_inactive">#444466</color>
+
+    <!-- Workout Intensity Colors -->
+    <color name="intensity_low">#2196F3</color>
+    <color name="intensity_medium">#FFB300</color>
+    <color name="intensity_high">#F44336</color>
+
+    <!-- Chart Colors -->
+    <color name="chart_bar">#E94560</color>
+    <color name="chart_line">#4CAF50</color>
+    <color name="chart_grid">#333355</color>
+    <color name="chart_label">#AAAAAA</color>
+
+    <!-- Quick Action Card Colors -->
+    <color name="quick_action_add">#E94560</color>
+    <color name="quick_action_analytics">#FFB300</color>
+    <color name="quick_action_profile">#4CAF50</color>
+    <color name="quick_action_nutrition">#FF6B6B</color>
+
+    <!-- Transparency Levels -->
+    <color name="overlay_dark">#80000000</color>
+    <color name="overlay_light">#80FFFFFF</color>
+    <color name="overlay_primary">#33E94560</color>
+
+    <!-- Gradient Line Colors -->
+    <color name="gradient_line_start">#E94560</color>
+    <color name="gradient_line_middle">#FF6B6B</color>
+    <color name="gradient_line_end">#E94560</color>
+
+    <!-- Circle Background Colors -->
+    <color name="circle_bg_primary_start">#E94560</color>
+    <color name="circle_bg_primary_end">#FF6B6B</color>
+    <color name="circle_bg_accent_start">#4ECDC4</color>
+    <color name="circle_bg_accent_end">#45B7D1</color>
+
+    <!-- Avatar Colors -->
+    <color name="avatar_background">#1E1E3A</color>
+    <color name="avatar_stroke">#E94560</color>
+
+    <!-- Version Badge Colors -->
+    <color name="version_background">#F5F5F5</color>
+    <color name="version_text">#757575</color>
+
+    <!-- Decorative Line Colors -->
+    <color name="decorative_line">#E94560</color>
+
+    <!-- Header Wave Colors -->
+    <color name="header_wave_start">#1A1A2E</color>
+    <color name="header_wave_end">#16213E</color>
+
+    <!-- Empty State Colors -->
+    <color name="empty_state_text">#555555</color>
+    <color name="empty_state_icon">#444466</color>
+
+    <!-- Success/Error Colors -->
+    <color name="success">#4CAF50</color>
+    <color name="error">#F44336</color>
+    <color name="warning">#FF9800</color>
+    <color name="info">#2196F3</color>
+
+    <!-- Link Colors -->
+    <color name="link">#E94560</color>
+    <color name="link_pressed">#FF6B6B</color>
+
+    <!-- Shadow Colors -->
+    <color name="shadow">#1A000000</color>
+    <color name="shadow_light">#0D000000</color>
+
+    <!-- Transparent Colors -->
+    <color name="transparent">#00000000</color>
+    <color name="semi_transparent">#80000000</color>
+
 </resources>

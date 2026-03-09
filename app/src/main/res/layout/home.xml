@@ -1,500 +1,729 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A1A2E"
-    android:fillViewport="true">
+    android:background="@drawable/splash_gradient_bg"
+    tools:context=".HomeActivity">
 
-    <LinearLayout
+    <!-- Animated Background Circles -->
+    <View
+        android:id="@+id/circle1"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@drawable/circle_bg_primary"
+        android:alpha="0.1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.1" />
+
+    <View
+        android:id="@+id/circle2"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:background="@drawable/circle_bg_accent"
+        android:alpha="0.08"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <!-- Main Content -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="20dp">
 
-        <!-- ─── TOP HEADER ─── -->
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/login_header_bg"
-            android:padding="20dp"
-            android:paddingTop="48dp"
-            android:paddingBottom="30dp">
+            android:layout_height="wrap_content">
 
-            <!-- Greeting Text -->
+            <!-- Header Section with Wave Background -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/headerSection"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@drawable/header_wave_bg"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="48dp"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <!-- Greeting Text -->
+                <LinearLayout
+                    android:id="@+id/layoutGreeting"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.3">
+
+                    <TextView
+                        android:id="@+id/tvGreeting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Good Morning,"
+                        android:textColor="#E0E0E0"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <TextView
+                        android:id="@+id/tvUserName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="John Doe"
+                        android:textColor="#FFFFFF"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-black"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
+
+                <!-- Notification Bell -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/notificationCard"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    app:cardCornerRadius="22dp"
+                    app:cardBackgroundColor="#33FFFFFF"
+                    app:strokeColor="@color/primary"
+                    app:strokeWidth="1dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/profileCard"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.3">
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Profile Avatar -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/profileCard"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    app:cardCornerRadius="26dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:strokeColor="@color/primary"
+                    app:strokeWidth="2dp"
+                    app:cardElevation="4dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.3">
+
+                    <ImageView
+                        android:id="@+id/ivProfileAvatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_default_avatar"
+                        android:scaleType="centerCrop"
+                        android:padding="2dp"
+                        android:contentDescription="Profile" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Decorative Quote -->
+                <TextView
+                    android:id="@+id/tvMotivationalQuote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Train insane or remain the same 💪"
+                    android:textColor="#80FFFFFF"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-light"
+                    android:alpha="0.7"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layoutGreeting" />
+
+                <ImageButton
+                    android:id="@+id/btnNotification"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="Notifications"
+                    android:padding="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_notification"
+                    tools:layout_editor_absoluteX="270dp"
+                    tools:layout_editor_absoluteY="80dp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Stats Cards Row -->
             <LinearLayout
-                android:id="@+id/layoutGreeting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvGreeting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Good Morning,"
-                    android:textColor="#FFDDDD"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tvUserName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="John Doe 💪"
-                    android:textColor="#FFFFFF"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <!-- Profile Avatar -->
-            <ImageView
-                android:id="@+id/ivProfileAvatar"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_default_avatar"
-                android:background="@drawable/circle_bg"
-                android:scaleType="centerCrop"
-                android:contentDescription="Profile" />
-
-            <!-- Notification Bell -->
-            <ImageButton
-                android:id="@+id/btnNotification"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_toStartOf="@id/ivProfileAvatar"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_notification"
-                android:background="@drawable/btn_icon_bg"
-                android:contentDescription="Notifications" />
-        </RelativeLayout>
-
-        <!-- ─── STATS ROW (BMI, Score, Streak) ─── -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:layout_marginTop="-10dp">
-
-            <!-- BMI Card -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="6dp"
-                app:cardBackgroundColor="#16213E">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:id="@+id/tvBMI"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="22.5"
-                        android:textColor="#E94560"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="BMI"
-                        android:textColor="#AAAAAA"
-                        android:textSize="11sp"
-                        android:layout_marginTop="2dp" />
-
-                    <TextView
-                        android:id="@+id/tvBMIStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Normal"
-                        android:textColor="#4CAF50"
-                        android:textSize="11sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Discipline Score Card -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="6dp"
-                app:cardBackgroundColor="#16213E">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:id="@+id/tvDisciplineScore"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="87"
-                        android:textColor="#FFB300"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Score"
-                        android:textColor="#AAAAAA"
-                        android:textSize="11sp"
-                        android:layout_marginTop="2dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Excellent"
-                        android:textColor="#FFB300"
-                        android:textSize="11sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Streak Card -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="1"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="6dp"
-                app:cardBackgroundColor="#16213E">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:id="@+id/tvStreak"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🔥 12"
-                        android:textColor="#FF6B35"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Day Streak"
-                        android:textColor="#AAAAAA"
-                        android:textSize="11sp"
-                        android:layout_marginTop="2dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Keep Going!"
-                        android:textColor="#FF6B35"
-                        android:textSize="11sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="2dp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <!-- ─── TODAY'S WORKOUT PLAN ─── -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:layout_marginTop="8dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Today's Workout Plan"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="12dp" />
-
-            <androidx.cardview.widget.CardView
+                android:id="@+id/statsRow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="6dp"
-                app:cardBackgroundColor="#0F3460">
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                android:layout_marginTop="-40dp"
+                android:visibility="invisible"
+                app:layout_constraintTop_toBottomOf="@id/headerSection">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="18dp">
+                <!-- BMI Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/bmiCard"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    app:cardBackgroundColor="#16213E"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp"
+                    app:strokeColor="@color/primary"
+                    app:strokeWidth="1dp">
 
-                    <LinearLayout
-                        android:id="@+id/layoutWorkoutInfo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="12dp">
 
                         <TextView
-                            android:id="@+id/tvWorkoutTitle"
+                            android:id="@+id/tvBMI"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Upper Body Strength"
-                            android:textColor="#FFFFFF"
-                            android:textSize="17sp"
-                            android:textStyle="bold" />
+                            android:text="22.5"
+                            android:textColor="@color/primary"
+                            android:textSize="28sp"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-black"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tvBMIStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Normal"
+                            android:textColor="#4CAF50"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvBMI" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="6 Exercises  •  45 min  •  Intermediate"
+                            android:text="BMI"
                             android:textColor="#AAAAAA"
                             android:textSize="12sp"
-                            android:layout_marginTop="4dp" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
 
-                        <!-- Progress bar for workout completion -->
+                        <View
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/bmi_icon_bg"
+                            android:layout_marginEnd="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Discipline Score Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/scoreCard"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    app:cardBackgroundColor="#16213E"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp"
+                    app:strokeColor="#FFB300"
+                    app:strokeWidth="1dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:id="@+id/tvDisciplineScore"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="87"
+                            android:textColor="#FFB300"
+                            android:textSize="28sp"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-black"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tvScoreLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Excellent"
+                            android:textColor="#FFB300"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvDisciplineScore" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Progress"
+                            android:text="Discipline"
                             android:textColor="#AAAAAA"
-                            android:textSize="11sp"
-                            android:layout_marginTop="10dp" />
+                            android:textSize="12sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
 
                         <ProgressBar
-                            android:id="@+id/progressWorkout"
-                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                            android:layout_width="200dp"
-                            android:layout_height="8dp"
-                            android:layout_marginTop="4dp"
-                            android:progress="40"
+                            android:id="@+id/progressScore"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:progress="87"
                             android:max="100"
-                            android:progressTint="#E94560"
-                            android:progressBackgroundTint="#333355" />
+                            android:progressTint="#FFB300"
+                            android:rotation="180"
+                            android:scaleY="3"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Streak Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/streakCard"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="#16213E"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp"
+                    app:strokeColor="#FF6B35"
+                    app:strokeWidth="1dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="12dp">
 
                         <TextView
-                            android:id="@+id/tvWorkoutProgress"
+                            android:id="@+id/tvStreak"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2 / 6 completed"
-                            android:textColor="#E94560"
-                            android:textSize="11sp"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
+                            android:text="12"
+                            android:textColor="#FF6B35"
+                            android:textSize="28sp"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-black"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tvStreakLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="🔥 Days"
+                            android:textColor="#FF6B35"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvStreak" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Streak"
+                            android:textColor="#AAAAAA"
+                            android:textSize="12sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🔥"
+                            android:textSize="24sp"
+                            android:alpha="0.3"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Today's Workout Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/todayWorkoutCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="20dp"
+                android:visibility="invisible"
+                app:cardBackgroundColor="#0F3460"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="8dp"
+                app:layout_constraintTop_toBottomOf="@id/statsRow"
+                app:strokeColor="@color/primary"
+                app:strokeWidth="1dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/tvWorkoutTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Upper Body Strength"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-black"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvWorkoutDetails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="6 Exercises  •  45 min  •  Intermediate"
+                        android:textColor="#AAAAAA"
+                        android:textSize="13sp"
+                        android:fontFamily="sans-serif-medium"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvWorkoutTitle" />
+
+                    <!-- Adaptive Badge -->
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipAdaptive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="🧠 ADAPTIVE PLAN"
+                        android:textColor="#FFFFFF"
+                        android:textSize="10sp"
+                        app:chipBackgroundColor="#33E94560"
+                        app:chipCornerRadius="12dp"
+                        app:chipStrokeColor="@color/primary"
+                        app:chipStrokeWidth="1dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvWorkoutDetails" />
+
+                    <!-- Progress Section -->
+                    <TextView
+                        android:id="@+id/tvProgressLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Today's Progress"
+                        android:textColor="#AAAAAA"
+                        android:textSize="12sp"
+                        android:fontFamily="sans-serif-medium"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/chipAdaptive" />
+
+                    <ProgressBar
+                        android:id="@+id/progressWorkout"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:max="100"
+                        android:progress="40"
+                        android:progressTint="@color/progress_gradient_start"
+                        android:progressBackgroundTint="#333355"
+                        app:layout_constraintEnd_toStartOf="@+id/tvWorkoutProgress"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvProgressLabel" />
+
+                    <TextView
+                        android:id="@+id/tvWorkoutProgress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2/6"
+                        android:textColor="@color/primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@id/progressWorkout"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/progressWorkout" />
 
                     <!-- Start Button -->
                     <Button
                         android:id="@+id/btnStartWorkout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="44dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/btn_primary_bg"
-                        android:text="START"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/btn_primary_gradient"
+                        android:fontFamily="sans-serif-black"
+                        android:letterSpacing="0.1"
+                        android:stateListAnimator="@null"
+                        android:text="START WORKOUT"
+                        android:textAllCaps="true"
                         android:textColor="#FFFFFF"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:paddingStart="18dp"
-                        android:paddingEnd="18dp" />
-                </RelativeLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
+                        android:textSize="14sp"
+                        app:layout_constraintTop_toBottomOf="@id/progressWorkout" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-        <!-- ─── QUICK ACTIONS ─── -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:layout_marginTop="20dp">
-
+            <!-- Quick Actions Title -->
             <TextView
+                android:id="@+id/tvQuickActions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="24dp"
                 android:text="Quick Actions"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="12dp" />
+                android:fontFamily="sans-serif-black"
+                android:visibility="invisible"
+                app:layout_constraintTop_toBottomOf="@id/todayWorkoutCard" />
 
-            <!-- Row 1 -->
+            <!-- Quick Actions Container -->
             <LinearLayout
+                android:id="@+id/quickActionsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="12dp">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical"
+                android:visibility="invisible"
+                app:layout_constraintTop_toBottomOf="@id/tvQuickActions">
 
-                <!-- Add Workout -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardAddWorkout"
-                    android:layout_width="0dp"
-                    android:layout_height="90dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="10dp"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="#16213E">
+                <!-- Row 1 -->
+                <LinearLayout
+                    android:id="@+id/quickActionsRow1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="10dp">
+                    <!-- Add Workout Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardAddWorkout"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        app:cardBackgroundColor="#16213E"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="4dp"
+                        app:strokeColor="@color/primary"
+                        app:strokeWidth="1dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="➕"
-                            android:textSize="24sp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="12dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Add Workout"
-                            android:textColor="#FFFFFF"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="➕"
+                                android:textSize="32sp"
+                                android:textColor="@color/primary" />
 
-                <!-- View Progress -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardViewProgress"
-                    android:layout_width="0dp"
-                    android:layout_height="90dp"
-                    android:layout_weight="1"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="#16213E">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="Add Workout"
+                                android:textColor="#FFFFFF"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-medium"
+                                android:gravity="center"
+                                android:textAlignment="center" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="10dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Log exercise"
+                                android:textColor="#AAAAAA"
+                                android:textSize="11sp"
+                                android:layout_marginTop="2dp"
+                                android:gravity="center" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="📈"
-                            android:textSize="24sp" />
+                    <!-- View Progress Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardViewProgress"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        app:cardBackgroundColor="#16213E"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="4dp"
+                        app:strokeColor="@color/primary"
+                        app:strokeWidth="1dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="View Progress"
-                            android:textColor="#FFFFFF"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="📊"
+                                android:textSize="32sp"
+                                android:textColor="#FFB300" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="Analytics"
+                                android:textColor="#FFFFFF"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-medium"
+                                android:gravity="center" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Monthly progress"
+                                android:textColor="#AAAAAA"
+                                android:textSize="11sp"
+                                android:layout_marginTop="2dp"
+                                android:gravity="center" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <!-- Row 2 -->
+                <LinearLayout
+                    android:id="@+id/quickActionsRow2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- My Profile Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardMyProfile"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        app:cardBackgroundColor="#16213E"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="4dp"
+                        app:strokeColor="@color/primary"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="👤"
+                                android:textSize="32sp"
+                                android:textColor="#4CAF50" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="My Profile"
+                                android:textColor="#FFFFFF"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-medium"
+                                android:gravity="center" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Health metrics"
+                                android:textColor="#AAAAAA"
+                                android:textSize="11sp"
+                                android:layout_marginTop="2dp"
+                                android:gravity="center" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Nutrition Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardNutrition"
+                        android:layout_width="0dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        app:cardBackgroundColor="#16213E"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="4dp"
+                        app:strokeColor="@color/primary"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🥗"
+                                android:textSize="32sp"
+                                android:textColor="#FF6B6B" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="Nutrition"
+                                android:textColor="#FFFFFF"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-medium"
+                                android:gravity="center" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Meal tracking"
+                                android:textColor="#AAAAAA"
+                                android:textSize="11sp"
+                                android:layout_marginTop="2dp"
+                                android:gravity="center" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
             </LinearLayout>
 
-            <!-- Row 2 -->
-            <LinearLayout
+            <!-- Bottom Spacing -->
+            <Space
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="24dp">
+                android:layout_height="20dp"
+                app:layout_constraintTop_toBottomOf="@id/quickActionsContainer" />
 
-                <!-- My Profile -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardMyProfile"
-                    android:layout_width="0dp"
-                    android:layout_height="90dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="10dp"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="#16213E">
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="👤"
-                            android:textSize="24sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="My Profile"
-                            android:textColor="#FFFFFF"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- Nutrition Log -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cardNutrition"
-                    android:layout_width="0dp"
-                    android:layout_height="90dp"
-                    android:layout_weight="1"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="#16213E">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="🥗"
-                            android:textSize="24sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Nutrition"
-                            android:textColor="#FFFFFF"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-            </LinearLayout>
-
-        </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

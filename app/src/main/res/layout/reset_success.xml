@@ -1,49 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A1A2E"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="32dp">
+    android:background="@drawable/splash_gradient_bg"
+    tools:context=".ResetSuccessActivity">
 
-    <!-- Big success icon -->
-    <ImageView
-        android:id="@+id/ivSuccessIcon"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:src="@drawable/ic_success_check"
-        android:contentDescription="Success"
-        android:layout_marginBottom="28dp" />
+    <!-- Animated Background Circles -->
+    <View
+        android:id="@+id/circle1"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:background="@drawable/circle_bg_primary"
+        android:alpha="0.15"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.1" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Password Reset!"
-        android:textColor="#FFFFFF"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="12dp" />
+    <View
+        android:id="@+id/circle2"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:background="@drawable/circle_bg_accent"
+        android:alpha="0.1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
 
-    <TextView
-        android:layout_width="280dp"
-        android:layout_height="wrap_content"
-        android:text="@string/your_password_has_been_successfully_reset_you_can_now_log_in_with_your_new_password"
-        android:textColor="#AAAAAA"
-        android:textSize="14sp"
-        android:gravity="center"
-        android:lineSpacingExtra="4dp"
-        android:layout_marginBottom="48dp" />
-
-    <Button
-        android:id="@+id/btnGoToLogin"
+    <!-- Main Content -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:background="@drawable/btn_primary_bg"
-        android:text="GO TO LOGIN"
-        android:textColor="#FFFFFF"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:letterSpacing="0.1" />
+        android:layout_height="match_parent"
+        android:padding="32dp">
 
-</LinearLayout>
+        <!-- Success Icon -->
+        <ImageView
+            android:id="@+id/ivSuccessIcon"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:src="@drawable/ic_success_check"
+            android:contentDescription="Success"
+            app:tint="@color/normal"
+            app:layout_constraintBottom_toTopOf="@+id/tvTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:layout_marginBottom="28dp" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tvTitle"
+            style="@style/Heading2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password Reset!"
+            app:layout_constraintBottom_toTopOf="@+id/tvMessage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivSuccessIcon"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Message -->
+        <TextView
+            android:id="@+id/tvMessage"
+            style="@style/BodyText"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="@string/your_password_has_been_successfully_reset_you_can_now_log_in_with_your_new_password"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp"
+            app:layout_constraintBottom_toTopOf="@+id/btnGoToLogin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+            android:layout_marginBottom="48dp" />
+
+        <!-- Go to Login Button -->
+        <Button
+            android:id="@+id/btnGoToLogin"
+            style="@style/PrimaryButton"
+            android:layout_width="match_parent"
+            android:text="GO TO LOGIN"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

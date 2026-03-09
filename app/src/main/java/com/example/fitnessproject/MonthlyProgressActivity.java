@@ -1,10 +1,11 @@
 package com.example.fitnessproject;
 
 import android.os.Bundle;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.card.MaterialCardView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,27 +15,34 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class MonthlyProgressActivity extends AppCompatActivity {
+public class MonthlyProgressActivity extends BaseActivity {
 
-    private ImageButton btnBack;
+    private Toolbar toolbar;
+    private MaterialCardView statsCard, barChartCard, lineChartCard, achievementCard;
     private TextView tvMonthLabel, tvMonthWorkouts, tvMonthDuration,
             tvMonthConsistency, tvAchievementTitle, tvAchievementDesc;
     private BarChartView barChart;
     private LineChartView lineChart;
-    private UserSessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.monthly_progress);
 
-        sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
         initViews();
+        setupToolbar();
         loadMonthlyData();
+        startAnimations();
     }
 
     private void initViews() {
-        btnBack = findViewById(R.id.btnBack);
+        circle1 = findViewById(R.id.circle1);
+        circle2 = findViewById(R.id.circle2);
+        toolbar = findViewById(R.id.toolbar);
+//        statsCard = findViewById(R.id.statsCard);
+//        barChartCard = findViewById(R.id.barChartCard);
+//        lineChartCard = findViewById(R.id.lineChartCard);
+//        achievementCard = findViewById(R.id.achievementCard);
         tvMonthLabel = findViewById(R.id.tvMonthLabel);
         tvMonthWorkouts = findViewById(R.id.tvMonthWorkouts);
         tvMonthDuration = findViewById(R.id.tvMonthDuration);
@@ -43,7 +51,18 @@ public class MonthlyProgressActivity extends AppCompatActivity {
         tvAchievementDesc = findViewById(R.id.tvAchievementDesc);
         barChart = findViewById(R.id.barChart);
         lineChart = findViewById(R.id.lineChart);
-        btnBack.setOnClickListener(v -> finish());
+    }
+
+    private void setupToolbar() {
+        setupToolbar(toolbar, "Monthly Progress", true);
+    }
+
+    private void startAnimations() {
+        animateBackgroundCircles();
+        animateCard(statsCard, 0);
+        animateCard(barChartCard, 150);
+        animateCard(lineChartCard, 300);
+        animateCard(achievementCard, 450);
     }
 
     private void loadMonthlyData() {
@@ -76,11 +95,9 @@ public class MonthlyProgressActivity extends AppCompatActivity {
                     int weekIndex = Math.min((dayOfMonth - 1) / 7, 3);
                     weekDurations[weekIndex] += dur;
                     if (dayOfMonth <= 31) dayFlags[dayOfMonth - 1] = 1;
-                } catch (Exception ignored) {
-                }
+                } catch (Exception ignored) {}
             }
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
 
         int daysElapsed = cal.get(Calendar.DAY_OF_MONTH);
         int activeDays = 0;

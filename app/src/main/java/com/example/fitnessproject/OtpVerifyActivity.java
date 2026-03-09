@@ -3,33 +3,32 @@ package com.example.fitnessproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.Locale;
 
-public class OtpVerifyActivity extends AppCompatActivity {
+public class OtpVerifyActivity extends BaseActivity {
 
-    private ImageButton btnBack;
-    private TextView    tvOtpEmail;
-    private TextView    tvCountdown;
-    private TextView    tvResendOtp;
-    private Button      btnVerifyOtp;
-    private EditText    etOtp1, etOtp2, etOtp3, etOtp4, etOtp5, etOtp6;
+    private Toolbar toolbar;
+    private MaterialCardView otpCard;
+    private TextView tvOtpEmail, tvCountdown, tvResendOtp, tvStepIndicator;
+    private Button btnVerifyOtp;
+    private EditText etOtp1, etOtp2, etOtp3, etOtp4, etOtp5, etOtp6;
 
     private EditText[] otpBoxes;
-    private String          userEmail    = "";
+    private String userEmail = "";
     private static final String STATIC_OTP = "123456";
-    private CountDownTimer  countDownTimer;
+    private CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +39,22 @@ public class OtpVerifyActivity extends AppCompatActivity {
         if (userEmail == null) userEmail = "";
 
         initViews();
+        setupToolbar();
         setupOtpAutoFocus();
         setupListeners();
         startCountdown();
+        startAnimations();
     }
 
     private void initViews() {
-        btnBack      = findViewById(R.id.btnBack);
-        tvOtpEmail   = findViewById(R.id.tvOtpEmail);
-        tvCountdown  = findViewById(R.id.tvCountdown);
-        tvResendOtp  = findViewById(R.id.tvResendOtp);
+        circle1 = findViewById(R.id.circle1);
+        circle2 = findViewById(R.id.circle2);
+        toolbar = findViewById(R.id.toolbar);
+        otpCard = findViewById(R.id.otpCard);
+        tvOtpEmail = findViewById(R.id.tvOtpEmail);
+        tvCountdown = findViewById(R.id.tvCountdown);
+        tvResendOtp = findViewById(R.id.tvResendOtp);
+        tvStepIndicator = findViewById(R.id.tvStepIndicator);
         btnVerifyOtp = findViewById(R.id.btnVerifyOtp);
 
         etOtp1 = findViewById(R.id.etOtp1);
@@ -61,6 +66,15 @@ public class OtpVerifyActivity extends AppCompatActivity {
 
         otpBoxes = new EditText[]{ etOtp1, etOtp2, etOtp3, etOtp4, etOtp5, etOtp6 };
         tvOtpEmail.setText(userEmail);
+    }
+
+    private void setupToolbar() {
+        setupToolbar(toolbar, "Verify OTP", true);
+    }
+
+    private void startAnimations() {
+        animateBackgroundCircles();
+        animateCard(otpCard, 0);
     }
 
     private void setupOtpAutoFocus() {
@@ -78,7 +92,7 @@ public class OtpVerifyActivity extends AppCompatActivity {
                             otpBoxes[idx + 1].requestFocus();
                         }
                         if (idx == otpBoxes.length - 1) {
-                            new Handler().postDelayed(() -> verifyOtp(), 200);
+                            handler.postDelayed(() -> verifyOtp(), 200);
                         }
                     }
                 }
@@ -99,15 +113,16 @@ public class OtpVerifyActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        btnBack.setOnClickListener(v -> finish());
-
-        btnVerifyOtp.setOnClickListener(v -> verifyOtp());
+        btnVerifyOtp.setOnClickListener(v -> {
+            animateClick(v);
+            verifyOtp();
+        });
 
         tvResendOtp.setOnClickListener(v -> {
+            animateClick(v);
             clearOtpBoxes();
             startCountdown();
-            Toast.makeText(this,
-                    "New OTP sent to " + userEmail, Toast.LENGTH_SHORT).show();
+            showToast("New OTP sent to " + userEmail);
         });
     }
 
@@ -120,29 +135,27 @@ public class OtpVerifyActivity extends AppCompatActivity {
                 + etOtp6.getText().toString().trim();
 
         if (entered.length() < 6) {
-            Toast.makeText(this,
-                    "Please enter the complete 6-digit OTP", Toast.LENGTH_SHORT).show();
+            showToast("Please enter the complete 6-digit OTP");
             return;
         }
 
         btnVerifyOtp.setEnabled(false);
         btnVerifyOtp.setText("Verifying...");
 
-        new Handler().postDelayed(() -> {
+        handler.postDelayed(() -> {
             if (entered.equals(STATIC_OTP)) {
                 if (countDownTimer != null) countDownTimer.cancel();
-                Toast.makeText(this, "OTP Verified! ✓", Toast.LENGTH_SHORT).show();
+                showToast("OTP Verified! ✓");
                 Intent intent = new Intent(OtpVerifyActivity.this, ResetPasswordActivity.class);
                 intent.putExtra("email", userEmail);
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 finish();
             } else {
                 btnVerifyOtp.setEnabled(true);
                 btnVerifyOtp.setText("VERIFY OTP");
                 clearOtpBoxes();
-                Toast.makeText(this,
-                        "Invalid OTP. Try again.\nHint: " + STATIC_OTP,
-                        Toast.LENGTH_LONG).show();
+                showLongToast("Invalid OTP. Try again.\nHint: " + STATIC_OTP);
             }
         }, 800);
     }

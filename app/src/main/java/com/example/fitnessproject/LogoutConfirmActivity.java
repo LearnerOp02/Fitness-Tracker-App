@@ -4,30 +4,58 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
-public class LogoutConfirmActivity extends AppCompatActivity {
+import com.google.android.material.card.MaterialCardView;
 
-    private UserSessionManager sessionManager;
+public class LogoutConfirmActivity extends BaseActivity {
+
+    private Toolbar toolbar;
+    private MaterialCardView logoutCard;
+    private Button btnConfirmLogout, btnCancelLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.logout_confirm);
 
-        sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
+        initViews();
+        setupToolbar();
+        startAnimations();
+        setupListeners();
+    }
 
-        Button btnConfirm = findViewById(R.id.btnConfirmLogout);
-        Button btnCancel = findViewById(R.id.btnCancelLogout);
+    private void initViews() {
+        toolbar = findViewById(R.id.toolbar);
+        // Note: The XML uses card_logout as ID, not logoutCard
+//        logoutCard = findViewById(R.id.card_logout);
+        btnConfirmLogout = findViewById(R.id.btnConfirmLogout);
+        btnCancelLogout = findViewById(R.id.btnCancelLogout);
+    }
 
-        btnCancel.setOnClickListener(v -> finish());
+    private void setupToolbar() {
+        setupToolbar(toolbar, "Log Out", true);
+    }
 
-        btnConfirm.setOnClickListener(v -> {
+    private void startAnimations() {
+        animateCard(logoutCard, 0);
+    }
+
+    private void setupListeners() {
+        btnCancelLogout.setOnClickListener(v -> {
+            animateClick(v);
+            finish();
+        });
+
+        btnConfirmLogout.setOnClickListener(v -> {
+            animateClick(v);
             sessionManager.logout();
 
             Intent intent = new Intent(LogoutConfirmActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            finish();
         });
     }
 }

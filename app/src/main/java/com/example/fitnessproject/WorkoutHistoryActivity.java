@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -24,16 +24,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class WorkoutHistoryActivity extends AppCompatActivity {
+public class WorkoutHistoryActivity extends BaseActivity {
 
-    private ImageButton btnBack;
+    private Toolbar toolbar;
+    private MaterialCardView statsCard, filterCard;
     private TextView tvTotalWorkouts, tvTotalMinutes, tvTotalCalories, tvEmptyHistory;
     private Button btnFilterAll, btnFilterDaily, btnFilterWeekly;
     private ListView listWorkoutHistory;
     private FloatingActionButton fabAddWorkout;
-    private UserSessionManager sessionManager;
 
-    private List<String> allEntries = new ArrayList<>();
     private JSONArray workoutHistory = new JSONArray();
 
     @Override
@@ -41,9 +40,10 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.workout_history);
 
-        sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
         initViews();
+        setupToolbar();
         setupListeners();
+        startAnimations();
     }
 
     @Override
@@ -54,16 +54,30 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        btnBack = findViewById(R.id.btnBack);
+        circle1 = findViewById(R.id.circle1);
+        circle2 = findViewById(R.id.circle2);
+        toolbar = findViewById(R.id.toolbar);
+//        statsCard = findViewById(R.id.statsCard);
+//        filterCard = findViewById(R.id.filterCard);
         tvTotalWorkouts = findViewById(R.id.tvTotalWorkouts);
         tvTotalMinutes = findViewById(R.id.tvTotalMinutes);
         tvTotalCalories = findViewById(R.id.tvTotalCalories);
-        tvEmptyHistory = findViewById(R.id.tvEmptyHistory);
+//        tvEmptyHistory = findViewById(R.id.tvEmptyHistory);
         btnFilterAll = findViewById(R.id.btnFilterAll);
         btnFilterDaily = findViewById(R.id.btnFilterDaily);
         btnFilterWeekly = findViewById(R.id.btnFilterWeekly);
         listWorkoutHistory = findViewById(R.id.listWorkoutHistory);
         fabAddWorkout = findViewById(R.id.fabAddWorkout);
+    }
+
+    private void setupToolbar() {
+        setupToolbar(toolbar, "Workout History", true);
+    }
+
+    private void startAnimations() {
+        animateBackgroundCircles();
+        animateCard(statsCard, 0);
+        animateCard(filterCard, 150);
     }
 
     private void loadHistory() {
@@ -99,16 +113,15 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                     String cal = obj.optString("calories", "0").replaceAll("[^0-9]", "");
                     if (!cal.isEmpty()) totalCalories += Integer.parseInt(cal);
 
-                    String line = "🏋  " + obj.optString("name", "Workout")
-                            + "  ·  " + obj.optString("type", "")
+                    String line = "🏋️ " + obj.optString("name", "Workout")
+                            + " · " + obj.optString("type", "")
                             + "\n⏱ " + dur + " min  |  " + obj.optString("intensity", "")
                             + "  |  " + obj.optString("calories", "")
                             + "\n📅 " + obj.optString("displayDate", date);
                     displayList.add(line);
                 }
             }
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
 
         tvTotalWorkouts.setText(String.valueOf(displayList.size()));
         tvTotalMinutes.setText(String.valueOf(totalMinutes));
@@ -127,7 +140,7 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
                     View v = super.getView(pos, convertView, parent);
                     TextView tv = v.findViewById(android.R.id.text1);
                     tv.setTextColor(0xFFFFFFFF);
-                    tv.setBackgroundColor(0xFF16213E);
+                    tv.setBackgroundColor(getResources().getColor(R.color.surface));
                     tv.setPadding(24, 20, 24, 20);
                     tv.setTypeface(null, Typeface.NORMAL);
                     tv.setLineSpacing(4f, 1f);
@@ -153,14 +166,14 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
 
     private void resetFilterButtons() {
         for (Button b : new Button[]{btnFilterAll, btnFilterDaily, btnFilterWeekly}) {
-            b.setTextColor(0xFFAAAAAA);
+            b.setTextColor(getResources().getColor(R.color.text_secondary));
             b.setBackgroundColor(android.graphics.Color.TRANSPARENT);
         }
     }
 
     private void styleActiveFilter(Button b) {
         b.setTextColor(0xFFFFFFFF);
-        b.setBackgroundResource(R.drawable.btn_primary_bg);
+        b.setBackgroundResource(R.drawable.btn_primary_gradient);
     }
 
     private String getWeekStart() {
@@ -170,11 +183,24 @@ public class WorkoutHistoryActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        btnBack.setOnClickListener(v -> finish());
-        btnFilterAll.setOnClickListener(v -> applyFilter("all"));
-        btnFilterDaily.setOnClickListener(v -> applyFilter("today"));
-        btnFilterWeekly.setOnClickListener(v -> applyFilter("week"));
-        fabAddWorkout.setOnClickListener(v ->
-                startActivity(new Intent(this, AddWorkoutActivity.class)));
+        btnFilterAll.setOnClickListener(v -> {
+            animateClick(v);
+            applyFilter("all");
+        });
+
+        btnFilterDaily.setOnClickListener(v -> {
+            animateClick(v);
+            applyFilter("today");
+        });
+
+        btnFilterWeekly.setOnClickListener(v -> {
+            animateClick(v);
+            applyFilter("week");
+        });
+
+        fabAddWorkout.setOnClickListener(v -> {
+            animateClick(v);
+            navigateTo(AddWorkoutActivity.class);
+        });
     }
 }

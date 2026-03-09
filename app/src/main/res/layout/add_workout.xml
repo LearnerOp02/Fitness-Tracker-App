@@ -1,245 +1,343 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A1A2E"
-    android:fillViewport="true">
+    android:background="@drawable/splash_gradient_bg"
+    tools:context=".AddWorkoutActivity">
 
-    <LinearLayout
+    <!-- Animated Background Circles -->
+    <View
+        android:id="@+id/circle1"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:background="@drawable/circle_bg_primary"
+        android:alpha="0.15"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.1" />
+
+    <View
+        android:id="@+id/circle2"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:background="@drawable/circle_bg_accent"
+        android:alpha="0.1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
+
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_back">
 
-        <!-- ── Top bar ── -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="48dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="12dp">
-
-            <ImageButton
-                android:id="@+id/btnBack"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_arrow_back"
-                android:background="@drawable/btn_icon_bg"
-                android:contentDescription="Back" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="Add Workout"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
-        <!-- ── Date badge ── -->
         <TextView
-            android:id="@+id/tvTodayDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="16dp"
-            android:text="Today — Mon, Jan 01"
-            android:textColor="#E94560"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+            android:layout_gravity="center"
+            android:text="Add Workout"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium" />
+    </androidx.appcompat.widget.Toolbar>
 
-        <!-- ── Card ── -->
-        <androidx.cardview.widget.CardView
+    <!-- Main Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="6dp"
-            app:cardBackgroundColor="#16213E">
+            android:orientation="vertical"
+            android:padding="20dp">
 
-            <LinearLayout
+            <!-- Header Section -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/headerSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:paddingBottom="20dp">
 
-                <!-- Exercise Type -->
                 <TextView
+                    android:id="@+id/tvTodayDate"
+                    style="@style/SmallText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Exercise Type"
-                    android:textColor="#AAAAAA"
-                    android:textSize="13sp"
-                    android:layout_marginBottom="8dp" />
+                    android:text="Monday, Jan 01, 2024"
+                    android:textColor="@color/primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <Spinner
-                    android:id="@+id/spinnerExerciseType"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:background="@drawable/edit_text_bg"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:layout_marginBottom="16dp" />
-
-                <!-- Workout Name -->
                 <TextView
+                    android:id="@+id/tvSubtitle"
+                    style="@style/BodyText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Workout Name"
-                    android:textColor="#AAAAAA"
-                    android:textSize="13sp"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_marginTop="4dp"
+                    android:text="Log your workout details below"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvTodayDate" />
 
-                <EditText
-                    android:id="@+id/etWorkoutName"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:background="@drawable/edit_text_bg"
-                    android:hint="e.g. Push-ups, Running, Squats"
-                    android:textColorHint="#555555"
-                    android:inputType="textCapSentences"
-                    android:padding="14dp"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
-                    android:layout_marginBottom="16dp" />
+                <View
+                    android:id="@+id/decorativeLine"
+                    android:layout_width="60dp"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/gradient_line"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvSubtitle" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <!-- Duration -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Duration (minutes)"
-                    android:textColor="#AAAAAA"
-                    android:textSize="13sp"
-                    android:layout_marginBottom="8dp" />
+            <!-- Workout Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/workoutCard"
+                style="@style/CardStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
 
-                <EditText
-                    android:id="@+id/etDuration"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:background="@drawable/edit_text_bg"
-                    android:hint="e.g. 30"
-                    android:textColorHint="#555555"
-                    android:inputType="number"
-                    android:padding="14dp"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
-                    android:layout_marginBottom="16dp" />
-
-                <!-- Intensity -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Intensity Level"
-                    android:textColor="#AAAAAA"
-                    android:textSize="13sp"
-                    android:layout_marginBottom="12dp" />
-
-                <!-- Intensity radio group -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="20dp">
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-                    <RadioGroup
-                        android:id="@+id/rgIntensity"
+                    <!-- Exercise Type -->
+                    <TextView
+                        style="@style/SmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Exercise Type"
+                        android:layout_marginBottom="8dp" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginBottom="16dp"
+                        app:cardBackgroundColor="@color/surface_light"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="@color/primary"
+                        app:strokeWidth="1dp">
+
+                        <Spinner
+                            android:id="@+id/spinnerExerciseType"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/transparent"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:spinnerMode="dropdown" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Workout Name -->
+                    <TextView
+                        style="@style/SmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Workout Name"
+                        android:layout_marginBottom="8dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/TextInputLayoutStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_marginBottom="16dp">
 
-                        <RadioButton
-                            android:id="@+id/rbLow"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etWorkoutName"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:background="@android:color/transparent"
+                            android:hint="e.g. Push-ups, Running, Squats"
+                            android:textColorHint="@color/text_hint"
+                            android:inputType="textCapSentences"
+                            android:padding="16dp"
+                            android:textColor="#FFFFFF"
+                            android:textSize="15sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Duration -->
+                    <TextView
+                        style="@style/SmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Duration (minutes)"
+                        android:layout_marginBottom="8dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/TextInputLayoutStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDuration"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:background="@android:color/transparent"
+                            android:hint="e.g. 30"
+                            android:textColorHint="@color/text_hint"
+                            android:inputType="number"
+                            android:padding="16dp"
+                            android:textColor="#FFFFFF"
+                            android:textSize="15sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Intensity -->
+                    <TextView
+                        style="@style/SmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Intensity Level"
+                        android:layout_marginBottom="12dp" />
+
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/intensityToggleGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        app:singleSelection="true"
+                        app:selectionRequired="true"
+                        app:checkedButton="@+id/btnMedium">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnLow"
+                            style="@style/Widget.Material3.Button.TonalButton"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="48dp"
                             android:layout_weight="1"
                             android:text="Low"
+                            android:textAllCaps="false"
                             android:textColor="#FFFFFF"
-                            android:buttonTint="#E94560" />
+                            app:backgroundTint="@android:color/transparent"
+                            app:strokeColor="@color/primary"
+                            app:strokeWidth="1dp"
+                            app:cornerRadius="24dp" />
 
-                        <RadioButton
-                            android:id="@+id/rbMedium"
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMedium"
+                            style="@style/Widget.Material3.Button.TonalButton"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="48dp"
                             android:layout_weight="1"
                             android:text="Medium"
+                            android:textAllCaps="false"
                             android:textColor="#FFFFFF"
-                            android:buttonTint="#E94560"
-                            android:checked="true" />
+                            app:backgroundTint="@android:color/transparent"
+                            app:strokeColor="@color/primary"
+                            app:strokeWidth="1dp"
+                            app:cornerRadius="24dp" />
 
-                        <RadioButton
-                            android:id="@+id/rbHigh"
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnHigh"
+                            style="@style/Widget.Material3.Button.TonalButton"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="48dp"
                             android:layout_weight="1"
                             android:text="High"
+                            android:textAllCaps="false"
                             android:textColor="#FFFFFF"
-                            android:buttonTint="#E94560" />
-                    </RadioGroup>
+                            app:backgroundTint="@android:color/transparent"
+                            app:strokeColor="@color/primary"
+                            app:strokeWidth="1dp"
+                            app:cornerRadius="24dp" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                    <!-- Calories Estimate -->
+                    <TextView
+                        style="@style/SmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Estimated Calories"
+                        android:layout_marginBottom="8dp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_marginBottom="20dp"
+                        app:cardBackgroundColor="@color/surface_light"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="@color/primary"
+                        app:strokeWidth="1dp">
+
+                        <TextView
+                            android:id="@+id/tvCaloriesEstimate"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:paddingStart="16dp"
+                            android:text="— kcal"
+                            android:textColor="@color/primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-black" />
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Notes -->
+                    <TextView
+                        style="@style/SmallText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Notes (optional)"
+                        android:layout_marginBottom="8dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/TextInputLayoutStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="24dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etNotes"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:background="@android:color/transparent"
+                            android:hint="How did it go?"
+                            android:textColorHint="@color/text_hint"
+                            android:inputType="textMultiLine"
+                            android:padding="16dp"
+                            android:gravity="top"
+                            android:textColor="#FFFFFF"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Save Button -->
+                    <Button
+                        android:id="@+id/btnSaveWorkout"
+                        style="@style/PrimaryButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:text="SAVE WORKOUT" />
                 </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <!-- Calories (auto-calc) -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Estimated Calories Burned"
-                    android:textColor="#AAAAAA"
-                    android:textSize="13sp"
-                    android:layout_marginBottom="8dp" />
+            <!-- Bottom Spacing -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
 
-                <TextView
-                    android:id="@+id/tvCaloriesEstimate"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:background="@drawable/bmi_preview_bg"
-                    android:gravity="center_vertical"
-                    android:paddingStart="14dp"
-                    android:text="— kcal"
-                    android:textColor="#E94560"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="20dp" />
+        </LinearLayout>
+    </ScrollView>
 
-                <!-- Notes -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Notes (optional)"
-                    android:textColor="#AAAAAA"
-                    android:textSize="13sp"
-                    android:layout_marginBottom="8dp" />
-
-                <EditText
-                    android:id="@+id/etNotes"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:background="@drawable/edit_text_bg"
-                    android:hint="How did it go?"
-                    android:textColorHint="#555555"
-                    android:inputType="textMultiLine"
-                    android:padding="14dp"
-                    android:gravity="top"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp"
-                    android:layout_marginBottom="24dp" />
-
-                <!-- Save button -->
-                <Button
-                    android:id="@+id/btnSaveWorkout"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:background="@drawable/btn_primary_bg"
-                    android:text="SAVE WORKOUT"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.1" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-    </LinearLayout>
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,133 +1,337 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A1A2E"
-    android:orientation="vertical">
+    android:background="@drawable/splash_gradient_bg"
+    tools:context=".SettingsActivity">
 
-    <!-- Top bar -->
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:paddingTop="48dp" android:paddingStart="16dp" android:paddingEnd="16dp" android:paddingBottom="12dp">
-        <ImageButton android:id="@+id/btnBack" android:layout_width="44dp" android:layout_height="44dp"
-            android:layout_alignParentStart="true" android:layout_centerVertical="true"
-            android:src="@drawable/ic_arrow_back" android:background="@drawable/btn_icon_bg" android:contentDescription="Back" />
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_centerInParent="true" android:text="Settings"
-            android:textColor="#FFFFFF" android:textSize="18sp" android:textStyle="bold" />
-    </RelativeLayout>
+    <!-- Animated Background Circles -->
+    <View
+        android:id="@+id/circle1"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:background="@drawable/circle_bg_primary"
+        android:alpha="0.15"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.1" />
 
-    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="vertical" android:padding="16dp">
+    <View
+        android:id="@+id/circle2"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:background="@drawable/circle_bg_accent"
+        android:alpha="0.1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
 
-            <!-- Profile section -->
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="ACCOUNT" android:textColor="#E94560" android:textSize="11sp"
-                android:textStyle="bold" android:layout_marginBottom="10dp" />
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_back">
 
-            <androidx.cardview.widget.CardView android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp" app:cardBackgroundColor="#16213E">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Settings"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <!-- Main Content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Header Section -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/headerSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp">
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    style="@style/Heading2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Settings"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvSubtitle"
+                    style="@style/BodyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Manage your account and preferences"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+                <View
+                    android:id="@+id/decorativeLine"
+                    android:layout_width="60dp"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/gradient_line"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvSubtitle" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Account Section -->
+            <TextView
+                style="@style/SmallText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ACCOUNT"
+                android:textColor="@color/primary"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/CardStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <!-- Update Profile -->
-                    <RelativeLayout android:id="@+id/rowUpdateProfile"
-                        android:layout_width="match_parent" android:layout_height="56dp"
-                        android:padding="16dp" android:background="?attr/selectableItemBackground">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="👤  Update Profile" android:textColor="#FFFFFF"
-                            android:textSize="14sp" android:layout_centerVertical="true" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="›" android:textColor="#AAAAAA" android:textSize="20sp"
-                            android:layout_alignParentEnd="true" android:layout_centerVertical="true" />
+                    <RelativeLayout
+                        android:id="@+id/rowUpdateProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:padding="16dp"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView
+                            style="@style/BodyText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="👤  Update Profile"
+                            android:textColor="#FFFFFF"
+                            android:layout_centerVertical="true" />
+
+                        <TextView
+                            style="@style/BodyText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="›"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="20sp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true" />
                     </RelativeLayout>
 
-                    <View android:layout_width="match_parent" android:layout_height="1dp"
-                        android:background="#2A2A5A" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/stroke"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp" />
 
                     <!-- Change Password -->
-                    <RelativeLayout android:id="@+id/rowChangePassword"
-                        android:layout_width="match_parent" android:layout_height="56dp"
-                        android:padding="16dp" android:background="?attr/selectableItemBackground">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="🔑  Change Password" android:textColor="#FFFFFF"
-                            android:textSize="14sp" android:layout_centerVertical="true" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="›" android:textColor="#AAAAAA" android:textSize="20sp"
-                            android:layout_alignParentEnd="true" android:layout_centerVertical="true" />
+                    <RelativeLayout
+                        android:id="@+id/rowChangePassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:padding="16dp"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView
+                            style="@style/BodyText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🔑  Change Password"
+                            android:textColor="#FFFFFF"
+                            android:layout_centerVertical="true" />
+
+                        <TextView
+                            style="@style/BodyText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="›"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="20sp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true" />
                     </RelativeLayout>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Preferences section -->
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="PREFERENCES" android:textColor="#E94560" android:textSize="11sp"
-                android:textStyle="bold" android:layout_marginBottom="10dp" />
+            <!-- Preferences Section -->
+            <TextView
+                style="@style/SmallText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PREFERENCES"
+                android:textColor="@color/primary"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp" />
 
-            <androidx.cardview.widget.CardView android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:layout_marginBottom="16dp"
-                app:cardCornerRadius="16dp" app:cardBackgroundColor="#16213E">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            <com.google.android.material.card.MaterialCardView
+                style="@style/CardStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <!-- Notifications toggle -->
-                    <RelativeLayout android:id="@+id/rowNotifications"
-                        android:layout_width="match_parent" android:layout_height="56dp"
-                        android:padding="16dp" android:background="?attr/selectableItemBackground">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="🔔  Notifications &amp; Reminders" android:textColor="#FFFFFF"
-                            android:textSize="14sp" android:layout_centerVertical="true" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="›" android:textColor="#AAAAAA" android:textSize="20sp"
-                            android:layout_alignParentEnd="true" android:layout_centerVertical="true" />
+                    <!-- Notifications -->
+                    <RelativeLayout
+                        android:id="@+id/rowNotifications"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:padding="16dp"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView
+                            style="@style/BodyText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🔔  Notifications  Reminders"
+                            android:textColor="#FFFFFF"
+                            android:layout_centerVertical="true" />
+
+                        <TextView
+                            style="@style/BodyText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="›"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="20sp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true" />
                     </RelativeLayout>
 
-                    <View android:layout_width="match_parent" android:layout_height="1dp"
-                        android:background="#2A2A5A" android:layout_marginStart="16dp" android:layout_marginEnd="16dp" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/stroke"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp" />
 
                     <!-- BMI Calculator -->
-                    <RelativeLayout android:id="@+id/rowBmi"
-                        android:layout_width="match_parent" android:layout_height="56dp"
-                        android:padding="16dp" android:background="?attr/selectableItemBackground">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="⚖️  BMI Calculator" android:textColor="#FFFFFF"
-                            android:textSize="14sp" android:layout_centerVertical="true" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="›" android:textColor="#AAAAAA" android:textSize="20sp"
-                            android:layout_alignParentEnd="true" android:layout_centerVertical="true" />
+                    <RelativeLayout
+                        android:id="@+id/rowBmi"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:padding="16dp"
+                        android:background="?attr/selectableItemBackground">
+
+                        <TextView
+                            style="@style/BodyText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="⚖️  BMI Calculator"
+                            android:textColor="#FFFFFF"
+                            android:layout_centerVertical="true" />
+
+                        <TextView
+                            style="@style/BodyText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="›"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="20sp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true" />
                     </RelativeLayout>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- App info section -->
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="APP INFO" android:textColor="#E94560" android:textSize="11sp"
-                android:textStyle="bold" android:layout_marginBottom="10dp" />
+            <!-- App Info Section -->
+            <TextView
+                style="@style/SmallText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="APP INFO"
+                android:textColor="@color/primary"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp" />
 
-            <androidx.cardview.widget.CardView android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:layout_marginBottom="24dp"
-                app:cardCornerRadius="16dp" app:cardBackgroundColor="#16213E">
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            <com.google.android.material.card.MaterialCardView
+                style="@style/CardStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
-                    <RelativeLayout android:layout_width="match_parent" android:layout_height="56dp"
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
                         android:padding="16dp">
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="ℹ️  Version" android:textColor="#FFFFFF"
-                            android:textSize="14sp" android:layout_centerVertical="true" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                            android:text="1.0.0" android:textColor="#AAAAAA" android:textSize="13sp"
-                            android:layout_alignParentEnd="true" android:layout_centerVertical="true" />
+
+                        <TextView
+                            style="@style/BodyText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ℹ️  Version"
+                            android:textColor="#FFFFFF"
+                            android:layout_centerVertical="true" />
+
+                        <TextView
+                            style="@style/BodyText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1.0.0"
+                            android:textColor="@color/text_secondary"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true" />
                     </RelativeLayout>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Logout -->
-            <Button android:id="@+id/btnLogout" android:layout_width="match_parent"
-                android:layout_height="52dp" android:background="@drawable/btn_outline_bg"
-                android:text="LOG OUT" android:textColor="#E94560"
-                android:textSize="15sp" android:textStyle="bold" />
+            <!-- Logout Button -->
+            <Button
+                android:id="@+id/btnLogout"
+                style="@style/OutlineButton"
+                android:layout_width="match_parent"
+                android:text="LOG OUT"
+                android:textColor="@color/primary" />
+
+            <!-- Bottom Spacing -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,9 +8,11 @@ import android.provider.MediaStore;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 
@@ -18,40 +20,57 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class VisualProgressActivity extends AppCompatActivity {
+public class VisualProgressActivity extends BaseActivity {
 
     private static final int REQ_START_PHOTO = 1001;
     private static final int REQ_END_PHOTO = 1002;
 
-    private ImageButton btnBack, btnUploadStart, btnUploadEnd;
+    private Toolbar toolbar;
+    private MaterialCardView startPhotoCard, endPhotoCard, summaryCard;
     private ImageView ivStartPhoto, ivEndPhoto;
-    private TextView tvStartDate, tvEndDate,
-            tvWeightChange, tvBmiChange, tvWorkoutsThisMonth;
-    private UserSessionManager sessionManager;
+    private FloatingActionButton btnUploadStart, btnUploadEnd;
+    private TextView tvStartDate, tvEndDate, tvWeightChange, tvBmiChange, tvWorkoutsThisMonth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.visual_progress);
 
-        sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
         initViews();
+        setupToolbar();
         loadSavedPhotos();
         loadNumericalData();
         setupListeners();
+        startAnimations();
     }
 
     private void initViews() {
-        btnBack = findViewById(R.id.btnBack);
-        btnUploadStart = findViewById(R.id.btnUploadStart);
-        btnUploadEnd = findViewById(R.id.btnUploadEnd);
+        circle1 = findViewById(R.id.circle1);
+        circle2 = findViewById(R.id.circle2);
+        toolbar = findViewById(R.id.toolbar);
+//        startPhotoCard = findViewById(R.id.startPhotoCard);
+//        endPhotoCard = findViewById(R.id.endPhotoCard);
+//        summaryCard = findViewById(R.id.summaryCard);
         ivStartPhoto = findViewById(R.id.ivStartPhoto);
         ivEndPhoto = findViewById(R.id.ivEndPhoto);
+        btnUploadStart = findViewById(R.id.btnUploadStart);
+        btnUploadEnd = findViewById(R.id.btnUploadEnd);
         tvStartDate = findViewById(R.id.tvStartDate);
         tvEndDate = findViewById(R.id.tvEndDate);
         tvWeightChange = findViewById(R.id.tvWeightChange);
         tvBmiChange = findViewById(R.id.tvBmiChange);
         tvWorkoutsThisMonth = findViewById(R.id.tvWorkoutsThisMonth);
+    }
+
+    private void setupToolbar() {
+        setupToolbar(toolbar, "Visual Progress", true);
+    }
+
+    private void startAnimations() {
+        animateBackgroundCircles();
+        animateCard(startPhotoCard, 0);
+        animateCard(endPhotoCard, 150);
+        animateCard(summaryCard, 300);
     }
 
     private void loadSavedPhotos() {
@@ -63,14 +82,12 @@ public class VisualProgressActivity extends AppCompatActivity {
         if (!startUri.isEmpty()) {
             try {
                 ivStartPhoto.setImageURI(Uri.parse(startUri));
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
         if (!endUri.isEmpty()) {
             try {
                 ivEndPhoto.setImageURI(Uri.parse(endUri));
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
         tvStartDate.setText(startDt);
         tvEndDate.setText(endDt);
@@ -85,18 +102,21 @@ public class VisualProgressActivity extends AppCompatActivity {
             currentWeight = Float.parseFloat(sessionManager.getUserWeight());
             prevWeight = sessionManager.getPrevMonthWeight();
             if (prevWeight == 0) prevWeight = currentWeight;
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
 
         float wDiff = currentWeight - prevWeight;
         String wStr = wDiff == 0 ? "No change" : String.format("%+.1f kg", wDiff);
         tvWeightChange.setText(wStr);
-        tvWeightChange.setTextColor(wDiff <= 0 ? 0xFF4CAF50 : 0xFFF44336);
+        tvWeightChange.setTextColor(wDiff <= 0 ?
+                getResources().getColor(R.color.normal) :
+                getResources().getColor(R.color.obese));
 
         if (currentBmi > 0 && prevBmi > 0) {
             float bDiff = currentBmi - prevBmi;
             tvBmiChange.setText(String.format("%+.1f pts", bDiff));
-            tvBmiChange.setTextColor(bDiff <= 0 ? 0xFF4CAF50 : 0xFFF44336);
+            tvBmiChange.setTextColor(bDiff <= 0 ?
+                    getResources().getColor(R.color.normal) :
+                    getResources().getColor(R.color.obese));
         } else {
             tvBmiChange.setText("N/A");
         }
@@ -108,20 +128,19 @@ public class VisualProgressActivity extends AppCompatActivity {
             for (int i = 0; i < arr.length(); i++) {
                 if (arr.getJSONObject(i).optString("date", "").startsWith(currentMonth)) count++;
             }
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
         tvWorkoutsThisMonth.setText(String.valueOf(count));
     }
 
     private void setupListeners() {
-        btnBack.setOnClickListener(v -> finish());
-
         btnUploadStart.setOnClickListener(v -> {
+            animateClick(v);
             Intent pick = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(pick, REQ_START_PHOTO);
         });
 
         btnUploadEnd.setOnClickListener(v -> {
+            animateClick(v);
             Intent pick = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(pick, REQ_END_PHOTO);
         });
@@ -148,6 +167,6 @@ public class VisualProgressActivity extends AppCompatActivity {
             sessionManager.savePhotoUri("endPhotoUri", uri.toString());
             sessionManager.savePhotoDate("endPhotoDate", date);
         }
-        Toast.makeText(this, "Photo saved! ✓", Toast.LENGTH_SHORT).show();
+        showToast("Photo saved! ✓");
     }
 }

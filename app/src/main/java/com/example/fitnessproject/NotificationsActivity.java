@@ -2,37 +2,56 @@ package com.example.fitnessproject;
 
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.Switch;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
 
-public class NotificationsActivity extends AppCompatActivity {
+import com.google.android.material.card.MaterialCardView;
 
-    private ImageButton btnBack;
-    private Switch sw1, sw2, sw3, sw4;
+public class NotificationsActivity extends BaseActivity {
+
+    private Toolbar toolbar;
+    private MaterialCardView workoutCard1, workoutCard2, healthCard1, healthCard2;
+    private SwitchCompat sw1, sw2, sw3, sw4;
     private Button btnSaveNotifications;
-    private UserSessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notifications);
 
-        sessionManager = ((FitnessApplication) getApplication()).getSessionManager();
         initViews();
+        setupToolbar();
         loadPreferences();
         setupListeners();
+        startAnimations();
     }
 
     private void initViews() {
-        btnBack = findViewById(R.id.btnBack);
+        circle1 = findViewById(R.id.circle1);
+        circle2 = findViewById(R.id.circle2);
+        toolbar = findViewById(R.id.toolbar);
+//        workoutCard1 = findViewById(R.id.workoutCard1);
+//        workoutCard2 = findViewById(R.id.workoutCard2);
+//        healthCard1 = findViewById(R.id.healthCard1);
+//        healthCard2 = findViewById(R.id.healthCard2);
         sw1 = findViewById(R.id.sw1);
         sw2 = findViewById(R.id.sw2);
         sw3 = findViewById(R.id.sw3);
         sw4 = findViewById(R.id.sw4);
         btnSaveNotifications = findViewById(R.id.btnSaveNotifications);
+    }
+
+    private void setupToolbar() {
+        setupToolbar(toolbar, "Notifications", true);
+    }
+
+    private void startAnimations() {
+        animateBackgroundCircles();
+        animateCard(workoutCard1, 0);
+        animateCard(workoutCard2, 100);
+        animateCard(healthCard1, 200);
+        animateCard(healthCard2, 300);
     }
 
     private void loadPreferences() {
@@ -43,14 +62,14 @@ public class NotificationsActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        btnBack.setOnClickListener(v -> finish());
         btnSaveNotifications.setOnClickListener(v -> {
+            animateClick(v);
             sessionManager.setNotificationPref("notif_workout", sw1.isChecked());
             sessionManager.setNotificationPref("notif_streak", sw2.isChecked());
             sessionManager.setNotificationPref("notif_water", sw3.isChecked());
             sessionManager.setNotificationPref("notif_inactive", sw4.isChecked());
 
-            Toast.makeText(this, "Notification preferences saved ✓", Toast.LENGTH_SHORT).show();
+            showToast("Notification preferences saved ✓");
             finish();
         });
     }

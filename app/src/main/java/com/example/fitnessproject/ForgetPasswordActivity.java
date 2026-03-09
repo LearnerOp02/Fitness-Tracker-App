@@ -2,59 +2,79 @@ package com.example.fitnessproject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
-public class ForgetPasswordActivity extends AppCompatActivity {
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.textfield.TextInputLayout;
 
-    private EditText    etForgotEmail;
-    private Button      btnSendOTP;
-    private TextView    tvBackToLogin;
-    private ImageButton btnBack;
+public class ForgetPasswordActivity extends BaseActivity {
+
+    private Toolbar toolbar;
+    private MaterialCardView forgotCard;
+    private TextInputLayout emailLayout;
+    private EditText etForgotEmail;
+    private Button btnSendOTP;
+    private TextView tvBackToLogin, tvStep;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forget_password);
+
         initViews();
+        setupToolbar();
+        startAnimations();
         setupListeners();
     }
 
     private void initViews() {
+        circle1 = findViewById(R.id.circle1);
+        circle2 = findViewById(R.id.circle2);
+        toolbar = findViewById(R.id.toolbar);
+        forgotCard = findViewById(R.id.forgotCard);
+        emailLayout = findViewById(R.id.emailLayout);
         etForgotEmail = findViewById(R.id.etForgotEmail);
-        btnSendOTP    = findViewById(R.id.btnSendOTP);
+        btnSendOTP = findViewById(R.id.btnSendOTP);
         tvBackToLogin = findViewById(R.id.tvBackToLogin);
-        btnBack       = findViewById(R.id.btnBack);
+        tvStep = findViewById(R.id.tvStep);
+    }
+
+    private void setupToolbar() {
+        setupToolbar(toolbar, "Forgot Password", true);
+    }
+
+    private void startAnimations() {
+        animateBackgroundCircles();
+        animateCard(forgotCard, 0);
     }
 
     private void setupListeners() {
-        btnBack.setOnClickListener(v -> finish());
-
-        tvBackToLogin.setOnClickListener(v -> {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+        btnSendOTP.setOnClickListener(v -> {
+            animateClick(v);
+            attemptSendOTP();
         });
 
-        btnSendOTP.setOnClickListener(v -> attemptSendOTP());
+        tvBackToLogin.setOnClickListener(v -> {
+            navigateTo(LoginActivity.class);
+            finish();
+        });
     }
 
     private void attemptSendOTP() {
         String email = etForgotEmail.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
-            etForgotEmail.setError("Please enter your email address");
+            emailLayout.setError("Please enter your email address");
             etForgotEmail.requestFocus();
             return;
         }
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etForgotEmail.setError("Enter a valid email address");
+            emailLayout.setError("Enter a valid email address");
             etForgotEmail.requestFocus();
             return;
         }
@@ -62,16 +82,16 @@ public class ForgetPasswordActivity extends AppCompatActivity {
         btnSendOTP.setEnabled(false);
         btnSendOTP.setText("Sending OTP...");
 
-        new Handler().postDelayed(() -> {
+        handler.postDelayed(() -> {
             btnSendOTP.setEnabled(true);
             btnSendOTP.setText("SEND OTP");
 
-            Toast.makeText(this, "OTP sent to " + email, Toast.LENGTH_SHORT).show();
+            showToast("OTP sent to " + email);
 
-            // Pass email to OTP screen
             Intent intent = new Intent(ForgetPasswordActivity.this, OtpVerifyActivity.class);
             intent.putExtra("email", email);
             startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }, 1200);
     }
 }

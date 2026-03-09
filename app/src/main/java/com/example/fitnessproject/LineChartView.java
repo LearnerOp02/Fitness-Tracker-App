@@ -7,6 +7,8 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.core.content.ContextCompat;
+
 public class LineChartView extends View {
 
     private float[] data = {};
@@ -30,13 +32,13 @@ public class LineChartView extends View {
     }
 
     private void init() {
-        linePaint.setColor(0xFF4CAF50);
+        linePaint.setColor(ContextCompat.getColor(getContext(), R.color.normal));
         linePaint.setStrokeWidth(5f);
         linePaint.setStyle(Paint.Style.STROKE);
         linePaint.setStrokeJoin(Paint.Join.ROUND);
         linePaint.setStrokeCap(Paint.Cap.ROUND);
         dotPaint.setColor(0xFFFFFFFF);
-        gridPaint.setColor(0x332A2A5A);
+        gridPaint.setColor(ContextCompat.getColor(getContext(), R.color.stroke));
         gridPaint.setStrokeWidth(1f);
     }
 
@@ -48,6 +50,7 @@ public class LineChartView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         if (data == null || data.length < 2) return;
+
         int w = getWidth(), h = getHeight();
         float maxVal = 1;
         for (float v : data) if (v > maxVal) maxVal = v;
@@ -56,11 +59,13 @@ public class LineChartView extends View {
         float chartW = w - padL - padR;
         float chartH = h - padT - padB;
 
+        // Draw grid lines
         for (int i = 1; i <= 4; i++) {
             float y = padT + chartH * (1 - i / 4f);
             canvas.drawLine(padL, y, w - padR, y, gridPaint);
         }
 
+        // Draw line
         Path path = new Path();
         for (int i = 0; i < data.length; i++) {
             float x = padL + (i / (float) (data.length - 1)) * chartW;
@@ -70,6 +75,7 @@ public class LineChartView extends View {
         }
         canvas.drawPath(path, linePaint);
 
+        // Draw dots
         for (int i = 0; i < data.length; i++) {
             float x = padL + (i / (float) (data.length - 1)) * chartW;
             float y = padT + chartH * (1 - data[i] / maxVal);
