@@ -467,7 +467,7 @@ public class HomeActivity extends AppCompatActivity {
 
         cardMyProfile.setOnClickListener(v -> {
             animateClick(v);
-            Intent intent = new Intent(HomeActivity.this, ProfileSetupActivity.class);
+            Intent intent = new Intent(HomeActivity.this, LogoutConfirmActivity.class);
             startActivity(intent);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         });

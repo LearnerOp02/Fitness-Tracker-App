@@ -342,7 +342,7 @@ public class RegisterActivity extends AppCompatActivity {
             sessionManager.createRegisterSession(name, email, password, phone, goal);
 
             Toast.makeText(this,
-                    "Account created successfully! Let's set up your profile. 💪",
+                    "Account created successfully! Let's login now.",
                     Toast.LENGTH_LONG).show();
 
             // Animate exit
@@ -351,7 +351,7 @@ public class RegisterActivity extends AppCompatActivity {
                     .translationY(-100f)
                     .setDuration(300)
                     .withEndAction(() -> {
-                        Intent intent = new Intent(RegisterActivity.this, ProfileSetupActivity.class);
+                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

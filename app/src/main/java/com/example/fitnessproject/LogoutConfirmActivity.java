@@ -28,7 +28,7 @@ public class LogoutConfirmActivity extends BaseActivity {
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
         // Note: The XML uses card_logout as ID, not logoutCard
-//        logoutCard = findViewById(R.id.card_logout);
+//         = findViewById(R.id.card_logout);
         btnConfirmLogout = findViewById(R.id.btnConfirmLogout);
         btnCancelLogout = findViewById(R.id.btnCancelLogout);
     }
